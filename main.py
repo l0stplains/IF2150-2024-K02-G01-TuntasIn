@@ -14,6 +14,10 @@ def main():
     # Initialize the PyQt5 application
     app = QApplication(sys.argv)
 
+    # Add style
+    with open("src/styles/main.qss", "r") as file:
+        app.setStyleSheet(file.read())
+
     # Set up the database
     # initialize_database()  # Ensure the database is set up before use
 
