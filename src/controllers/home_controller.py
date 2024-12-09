@@ -133,7 +133,7 @@ class HomeController:
         ORDER BY t.due_date DESC
         """
         
-        cursor.execute(query, tuple(params))
+        # cursor.execute(query, tuple(params))
         tasks = cursor.fetchall()
         
         for task in tasks:

@@ -1,12 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from src.ui.home_ui import HomeUI
+from src.ui.folder_ui import FileFolderUI
 from src.controllers.home_controller import HomeController
 from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 # from src.setup_database import setup_database  # Tambahkan ini
 
-class MainWindow(QMainWindow):
+class Folder_Main(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Tuntasin")
@@ -23,15 +23,15 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.navbar)
         
         # Add home widget
-        self.home_ui = HomeUI()
-        self.home_controller = HomeController(self.home_ui)
-        layout.addWidget(self.home_ui)
+        self.folder_ui = FileFolderUI()
+        # self.home_controller = HomeController(self.home_ui)
+        layout.addWidget(self.folder_ui)
         
         # Set window properties
         self.setMinimumSize(800, 600)
         
         # Connect navbar signals
-        self.navbar.home_clicked.connect(lambda: self.home_ui.show())
+        # self.navbar.home_clicked.connect(lambda: self.home_ui.show())
         self.navbar.folder_clicked.connect(self.show_folder)
         self.navbar.calendar_clicked.connect(self.show_calendar)
         self.navbar.progress_clicked.connect(self.show_progress)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print("Warning: style.qss not found")
     
-    window = MainWindow()
+    window = Folder_Main()
     window.show()
     
     sys.exit(app.exec_())
