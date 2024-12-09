@@ -16,7 +16,7 @@ class NavBar(QWidget):
         layout.setContentsMargins(10, 5, 10, 5)
         
         # Logo/Brand
-        brand = QPushButton("Tuntasin")
+        brand = QPushButton("TuntasIn")
         brand.setObjectName("navBrand")
         brand.clicked.connect(self.home_clicked.emit)
         
