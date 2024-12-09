@@ -9,7 +9,7 @@ from src.setup_database import setup_database  # Tambahkan ini
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Tuntasin")
+        self.setWindowTitle("TuntasIn")
         self.setup_ui()
         
     def setup_ui(self):
@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.home_ui)
         
         # Set window properties
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(1280, 720)
         
         # Connect navbar signals
         self.navbar.home_clicked.connect(lambda: self.home_ui.show())
