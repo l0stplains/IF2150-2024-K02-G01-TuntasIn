@@ -1,228 +1,263 @@
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QGridLayout, QScrollArea, QFrame, QMessageBox, QDialog, QFormLayout, 
+    QGridLayout, QScrollArea, QFrame, QMessageBox, QDialog, QFormLayout,
     QLineEdit, QDesktopWidget
 )
 from PyQt5.QtCore import Qt, QDate
+from PyQt5.QtGui import QFont
 import sqlite3
 
-
-class CustomCalendar(QWidget):
+class CalendarUi(QWidget):
     def __init__(self, db_path):
         super().__init__()
         self.db_path = db_path
         self.current_date = QDate.currentDate()
-
         self.init_ui()
 
     def init_ui(self):
-        """Initialize the calendar UI layout."""
-        self.setWindowTitle("Custom Calendar")
-        self.resize(1920, 1080)
-        self.move(QDesktopWidget().availableGeometry().center() - self.frameGeometry().center())
-
         # Main layout
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(10, 10, 10, 10)
-        main_layout.setAlignment(Qt.AlignTop)
+        main_layout.setContentsMargins(10, 0, 10, 0)
 
         # Navigation bar
         nav_layout = QHBoxLayout()
         self.prev_button = QPushButton("◀")
+        self.prev_button.setObjectName("calendarNavButtonPrev")
         self.prev_button.clicked.connect(self.previous_month)
-        self.prev_button.setFixedWidth(50)
         self.month_label = QLabel(self.current_date.toString("MMMM yyyy"))
         self.month_label.setAlignment(Qt.AlignCenter)
-        self.month_label.setFixedWidth(300)
-        self.month_label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.month_label.setFont(QFont('Arial', 12, QFont.Bold))
         self.next_button = QPushButton("▶")
+        self.next_button.setObjectName("calendarNavButtonNext")
         self.next_button.clicked.connect(self.next_month)
-        self.next_button.setFixedWidth(50)
 
         nav_container = QWidget()
         nav_layout.addWidget(self.prev_button)
         nav_layout.addWidget(self.month_label, stretch=1)
         nav_layout.addWidget(self.next_button)
-        nav_layout.setAlignment(Qt.AlignLeft)
         nav_container.setLayout(nav_layout)
+        nav_container.setFixedWidth(300)
 
         # Calendar grid
-        grid_container = QWidget()
         self.calendar_grid = QGridLayout()
-        self.calendar_grid.setSpacing(2)  # Reduce gaps between cells
-        grid_container.setLayout(self.calendar_grid)
+        self.calendar_grid.setSpacing(5)
 
-        grid_container.setFixedWidth(1920)
-        nav_container.setFixedWidth(1920)
+        # Add widgets to main layout
         main_layout.addWidget(nav_container)
-        main_layout.addWidget(grid_container)
-
-        main_layout.setAlignment(Qt.AlignHCenter)
+        main_layout.addLayout(self.calendar_grid)
 
         self.setLayout(main_layout)
         self.populate_calendar()
 
-        # Apply QSS for styling
-        self.setStyleSheet("""
-            QPushButton {
-                font-size: 16px;
-                padding: 5px;
-            }
-            QLabel {
-                padding: 0px;
-            }
-            QWidget#dayCell {
-                background: white;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                min-height: 160px;
-                max-height: 160px;
-            }
-            QScrollArea {
-                border: none;
-                padding: 4px;
-            }
-            *[daylabel=\"true\"] {
-                min-height: 40px;
-                max-height: 40px;
-                background-color: yellow;
-            }
-            dayCell {
-                margin: 0px;
-            }
-        """)
+        # Apply custom styling
+        self.setStyleSheet(self.get_stylesheet())
+
+    def center_window(self):
+        screen_center = QDesktopWidget().availableGeometry().center()
+        frame_geometry = self.frameGeometry()
+        frame_geometry.moveCenter(screen_center)
+        self.move(frame_geometry.topLeft())
 
     def populate_calendar(self):
-        """Populate the calendar with day cells and tasks."""
+        # Clear existing widgets
         for i in reversed(range(self.calendar_grid.count())):
             widget = self.calendar_grid.itemAt(i).widget()
             if widget:
                 widget.deleteLater()
 
-        # Add day headers
+        # Day headers
         day_headers = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         for col, header in enumerate(day_headers):
             header_label = QLabel(header)
             header_label.setAlignment(Qt.AlignCenter)
-            header_label.setProperty("daylabel", "true")
-            header_label.setStyleSheet("font-weight: bold; font-size: 16px;")
+            header_label.setProperty("dayHeader", True)
             self.calendar_grid.addWidget(header_label, 0, col)
+            self.calendar_grid.setRowStretch(0, 1)
+            self.calendar_grid.setColumnStretch(col, 1)
 
-        # Calculate the first day of the month and its weekday
-        first_day = QDate(self.current_date.year(),
-                          self.current_date.month(), 1)
+        # Calculate days
+        first_day = QDate(self.current_date.year(), self.current_date.month(), 1)
         start_col = first_day.dayOfWeek() % 7
         num_days = first_day.daysInMonth()
 
-        # Populate days
-        row = 1
-        col = start_col
+        # Populate day cells
+        row, col = 1, start_col
         for day in range(1, num_days + 1):
             day_widget = self.create_day_cell(day)
             self.calendar_grid.addWidget(day_widget, row, col)
-
+            self.calendar_grid.setRowStretch(row, 1)
+            self.calendar_grid.setColumnStretch(col, 1)
             col += 1
-            if col > 6:  # Move to next row after Sunday
+            if col > 6:
                 col = 0
                 row += 1
 
     def create_day_cell(self, day):
-        """Create a cell for a specific day with tasks."""
         day_widget = QWidget()
-        day_widget.setObjectName("dayCell")  # For QSS styling
+        day_widget.setObjectName("dayCell")
         day_layout = QVBoxLayout(day_widget)
-        day_layout.setContentsMargins(5, 5, 5, 5)
+        day_layout.setContentsMargins(10, 10, 10, 10)
 
         # Day label
         day_label = QLabel(str(day))
-        day_label.setAlignment(Qt.AlignCenter)
-        add_task_button = QPushButton("+")
-        add_task_button.setFixedSize(8, 8)
-        add_task_button.clicked.connect(lambda: self.add_task_dialog(date))
+        day_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
         day_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         day_layout.addWidget(day_label)
-        # day_layout.addWidget(add_task_button)
-        # Add task button
 
-        # Scrollable task list
-        task_scroll_area = QScrollArea()
+        # Scrollable task area
+        task_scroll = QScrollArea()
+        task_scroll.setWidgetResizable(True)
         task_list_widget = QWidget()
         task_list_layout = QVBoxLayout(task_list_widget)
-        task_list_layout.setContentsMargins(0, 0, 0, 0)
+        task_list_layout.setContentsMargins(5, 5, 5, 5)
 
-        date = QDate(self.current_date.year(),
-                     self.current_date.month(), day).toString("yyyy-MM-dd")
+        # Add tasks to task list
+        date = QDate(self.current_date.year(), self.current_date.month(), day).toString("yyyy-MM-dd")
         tasks = self.get_tasks_for_date(date)
         for task in tasks:
             task_label = QLabel(task)
-            task_label.setStyleSheet(
-                "background: yellow; padding: 4px; border-radius: 8px; font-size: 12px; margin: 2px 12px; max-height: 12px;")
+            task_label.setObjectName("taskLabel")
             task_list_layout.addWidget(task_label)
 
-        task_scroll_area.setWidget(task_list_widget)
-        task_scroll_area.setWidgetResizable(True)
-        day_layout.addWidget(task_scroll_area)
+        task_scroll.setWidget(task_list_widget)
+        day_layout.addWidget(task_scroll)
+        day_layout.setObjectName("dayTaskScrollArea")
 
         return day_widget
 
     def get_tasks_for_date(self, date):
-        """Retrieve tasks for a specific date from the database."""
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
-            cursor.execute(
-                "SELECT task_name FROM tasks WHERE due_date = ?", (date,))
-            tasks = [row[0] for row in cursor.fetchall()]
+            query = """
+SELECT t.id, t.name, t.category, t.status, t.due_date, GROUP_CONCAT(tag.name) AS tags
+FROM tasks t
+LEFT JOIN tags tag ON t.id = tag.task_id
+WHERE t.due_date = ?
+GROUP BY t.id;
+"""
+            cursor.execute(query, (date,))
+            # Fetch and print the results
+           
+            tasks = [row[1] for row in cursor.fetchall()]
             conn.close()
             return tasks
         except sqlite3.Error as e:
             print(f"Database Error: {e}")
             return []
 
-    def add_task_dialog(self, date):
-        """Open a dialog to add a task for a specific date."""
-        dialog = QDialog(self)
-        dialog.setWindowTitle(f"Add Task for {date}")
-
-        form_layout = QFormLayout()
-        task_name_input = QLineEdit()
-        form_layout.addRow("Task Name:", task_name_input)
-
-        save_button = QPushButton("Save")
-        save_button.clicked.connect(lambda: self.add_task(
-            task_name_input.text(), date, dialog))
-        form_layout.addWidget(save_button)
-
-        dialog.setLayout(form_layout)
-        dialog.exec_()
-
-    def add_task(self, task_name, date, dialog):
-        """Save a new task to the database."""
-        try:
-            conn = sqlite3.connect(self.db_path)
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO tasks (task_name, due_date) VALUES (?, ?)", (task_name, date))
-            conn.commit()
-            conn.close()
-
-            QMessageBox.information(
-                self, "Success", "Task added successfully!")
-            dialog.accept()
-
-            self.populate_calendar()  # Reload the calendar to display the new task
-        except sqlite3.Error as e:
-            QMessageBox.critical(self, "Database Error",
-                                 f"Failed to add task: {e}")
-
     def previous_month(self):
-        """Navigate to the previous month."""
         self.current_date = self.current_date.addMonths(-1)
         self.month_label.setText(self.current_date.toString("MMMM yyyy"))
         self.populate_calendar()
 
     def next_month(self):
-        """Navigate to the next month."""
         self.current_date = self.current_date.addMonths(1)
         self.month_label.setText(self.current_date.toString("MMMM yyyy"))
         self.populate_calendar()
+
+    def get_stylesheet(self):
+        return """
+            /* Calendar */
+            QScrollArea {
+                border: none;
+                background: transparent;
+            }
+
+            QScrollBar:vertical {
+                border: none;
+                background: #E8EAF6;
+                width: 10px;
+                margin: 0;
+            }
+
+            QScrollBar::handle:vertical {
+                background: #B39DDB;
+                border-radius: 5px;
+                min-height: 20px;
+            }
+
+            QScrollBar::handle:vertical:hover {
+                background: #9575CD;
+            }
+
+            QScrollBar:horizontal {
+                border: none;
+                background: #E8EAF6;
+                height: 10px;
+                margin: 0;
+            }
+
+            QScrollBar::handle:horizontal {
+                background: #B39DDB;
+                border-radius: 5px;
+                min-width: 20px;
+            }
+
+            QScrollBar::handle:horizontal:hover {
+                background: #9575CD;
+            }
+
+            QLabel[dayHeader="true"] {
+                font-size: 12px;
+                font-weight: bold;
+                color: #5C6BC0;
+                min-height: 20px;
+                max-height: 20px;
+                background: #E8EAF6;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            QWidget#dayCell {
+                background: white;
+                max-height: 160px;
+                max-width:200px;
+                border: 1px solid #E8EAF6;
+                border-radius: 10px;
+            }
+            QLabel#taskLabel {
+                background: #FFFFFF;
+                border: 1px solid #7E57C2;
+                border-radius: 5px;
+                padding: 5px;
+                min-height: 15px;
+                max-height: 15px;
+                margin: 1px 0;
+                font-size: 12px;
+            }
+            QPushButton#addTaskButton {
+                background: #7E57C2;
+                color: white;
+                font-weight: bold;
+                border-radius: 5px;
+                min-width: 30px;
+                max-width: 30px;
+                min-height: 30px;
+                max-height: 30px;
+            }
+            QPushButton#addTaskButton:hover {
+                background: #673AB7;
+            }
+            #dayTaskScrollArea{
+                max-width: 100%;
+            }
+            #calendarNavButtonPrev, #calendarNavButtonNext {
+                background-color: #7E57C2;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 20px;
+                font-weight: bold;
+                margin: 0 8px;
+            }
+
+            #calendarNavButtonPrev:hover, #calendarNavButtonNext:hover {
+                background-color: #673AB7;
+            }
+
+            #calendarNavButtonPrev:pressed, #calendarNavButtonNext:pressed {
+                background-color: #5E35B1;
+            }
+
+        """

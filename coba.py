@@ -1,13 +1,18 @@
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import Qt
 import sqlite3
-from src.ui.calendar_ui import CustomCalendar
+from src.ui.calendar_ui import CalendarUi
 import sys
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
+    if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+    app = QApplication(sys.argv)
     # Ensure the database exists
-    db_path = "awok.db"
+    db_path = "tasks.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("""
@@ -20,7 +25,7 @@ if __name__ == "__main__":
     conn.close()
 
     # Launch the custom calendar
-    calendar = CustomCalendar(db_path)
+    calendar = CalendarUi(db_path)
     calendar.show()
 
     sys.exit(app.exec_())
