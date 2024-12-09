@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QGridLayout, QScrollArea, QFrame, QMessageBox, QDialog, QFormLayout, 
-    QLineEdit, QDesktopWidget
+    QGridLayout, QScrollArea, QFrame, QMessageBox, QDialog, QFormLayout, QLineEdit
 )
 from PyQt5.QtCore import Qt, QDate
 import sqlite3
@@ -18,8 +17,7 @@ class CustomCalendar(QWidget):
     def init_ui(self):
         """Initialize the calendar UI layout."""
         self.setWindowTitle("Custom Calendar")
-        self.resize(1920, 1080)
-        self.move(QDesktopWidget().availableGeometry().center() - self.frameGeometry().center())
+        self.setGeometry(100, 100, 1000, 800)
 
         # Main layout
         main_layout = QVBoxLayout(self)
@@ -30,34 +28,21 @@ class CustomCalendar(QWidget):
         nav_layout = QHBoxLayout()
         self.prev_button = QPushButton("◀")
         self.prev_button.clicked.connect(self.previous_month)
-        self.prev_button.setFixedWidth(50)
         self.month_label = QLabel(self.current_date.toString("MMMM yyyy"))
         self.month_label.setAlignment(Qt.AlignCenter)
-        self.month_label.setFixedWidth(300)
         self.month_label.setStyleSheet("font-size: 20px; font-weight: bold;")
         self.next_button = QPushButton("▶")
         self.next_button.clicked.connect(self.next_month)
-        self.next_button.setFixedWidth(50)
 
-        nav_container = QWidget()
         nav_layout.addWidget(self.prev_button)
         nav_layout.addWidget(self.month_label, stretch=1)
         nav_layout.addWidget(self.next_button)
-        nav_layout.setAlignment(Qt.AlignLeft)
-        nav_container.setLayout(nav_layout)
+        main_layout.addLayout(nav_layout)
 
         # Calendar grid
-        grid_container = QWidget()
         self.calendar_grid = QGridLayout()
-        self.calendar_grid.setSpacing(2)  # Reduce gaps between cells
-        grid_container.setLayout(self.calendar_grid)
-
-        grid_container.setFixedWidth(1920)
-        nav_container.setFixedWidth(1920)
-        main_layout.addWidget(nav_container)
-        main_layout.addWidget(grid_container)
-
-        main_layout.setAlignment(Qt.AlignHCenter)
+        self.calendar_grid.setSpacing(5)  # Reduce gaps between cells
+        main_layout.addLayout(self.calendar_grid)
 
         self.setLayout(main_layout)
         self.populate_calendar()
@@ -75,17 +60,18 @@ class CustomCalendar(QWidget):
                 background: white;
                 border: 1px solid #ccc;
                 border-radius: 8px;
-                min-height: 160px;
-                max-height: 160px;
+                min-width: 160px;
+                min-height: 120px;
+                max-width: 160px;
+                max-height: 120px;
             }
             QScrollArea {
                 border: none;
-                padding: 4px;
             }
             *[daylabel=\"true\"] {
                 min-height: 40px;
                 max-height: 40px;
-                background-color: yellow;
+                background-color:rgb(255,0,0);
             }
             dayCell {
                 margin: 0px;
@@ -135,13 +121,12 @@ class CustomCalendar(QWidget):
 
         # Day label
         day_label = QLabel(str(day))
-        day_label.setAlignment(Qt.AlignCenter)
         add_task_button = QPushButton("+")
         add_task_button.setFixedSize(8, 8)
         add_task_button.clicked.connect(lambda: self.add_task_dialog(date))
         day_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         day_layout.addWidget(day_label)
-        # day_layout.addWidget(add_task_button)
+        day_layout.addWidget(add_task_button)
         # Add task button
 
         # Scrollable task list
@@ -156,7 +141,7 @@ class CustomCalendar(QWidget):
         for task in tasks:
             task_label = QLabel(task)
             task_label.setStyleSheet(
-                "background: yellow; padding: 4px; border-radius: 8px; font-size: 12px; margin: 2px 12px; max-height: 12px;")
+                "background: yellow; padding: 4px; border-radius: 4px; font-size: 12px; margin: 2px;")
             task_list_layout.addWidget(task_label)
 
         task_scroll_area.setWidget(task_list_widget)
