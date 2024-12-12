@@ -20,15 +20,15 @@ class FileFolderUI(QMainWindow):
 
         # Add and Filter Buttons
         button_layout = QHBoxLayout()
-        add_button = QPushButton("Add")
-        filter_button = QPushButton("Filter")
+        self.add_button = QPushButton("Add")
+        self.filter_button = QPushButton("Filter")
 
         button_layout.addStretch()  # Push buttons to the right
-        add_button.setFixedWidth(120)
-        filter_button.setFixedWidth(120)
+        self.add_button.setFixedWidth(120)
+        self.filter_button.setFixedWidth(120)
 
         # Style buttons (optional)
-        add_button.setStyleSheet("""
+        self.add_button.setStyleSheet("""
             QPushButton {
                 padding: 5px 10px;
                 background-color: #007BFF;
@@ -40,7 +40,7 @@ class FileFolderUI(QMainWindow):
                 background-color: #0056b3;
             }
         """)
-        filter_button.setStyleSheet("""
+        self.filter_button.setStyleSheet("""
             QPushButton {
                 padding: 5px 10px;
                 background-color: #28A745;
@@ -54,8 +54,8 @@ class FileFolderUI(QMainWindow):
         """)
 
         # Add buttons to layout
-        button_layout.addWidget(add_button)
-        button_layout.addWidget(filter_button)
+        button_layout.addWidget(self.add_button)
+        button_layout.addWidget(self.filter_button)
         button_layout.addStretch()  # Push buttons to the left
 
         # Add button layout to main layout
@@ -79,6 +79,7 @@ class FileFolderUI(QMainWindow):
         """)
 
         # Add some cards
+        self.cards = []
         cards = [
             ("Title 1", "This is the first card.", "img/pdf.png"),
             ("Title 2", "This is the second card.", "img/txt.png"),
@@ -92,6 +93,8 @@ class FileFolderUI(QMainWindow):
         for title, description, icon in cards:
             card = Card(title, description, icon, self)
             grid_layout.addWidget(card, row, col)
+            
+            self.cards.append(card)  # Store the card reference
 
             col += 1
             if col > 2:  # Limit to 3 cards per row
@@ -148,9 +151,9 @@ class Card(QWidget):
         desc_label.setAlignment(Qt.AlignCenter)
         desc_label.setWordWrap(True)  # Enable text wrapping for long descriptions
 
-        # Add a button
-        button = QPushButton("More Info", self)
-        button.setStyleSheet("""
+        # Open File button
+        self.open_file_button = QPushButton("Open File", self)
+        self.open_file_button.setStyleSheet("""
             QPushButton {
                 padding: 5px 10px;
                 background-color: #4CAF50;
@@ -167,7 +170,7 @@ class Card(QWidget):
         layout.addWidget(icon_label)
         layout.addWidget(title_label)
         layout.addWidget(desc_label)
-        layout.addWidget(button)
+        layout.addWidget(self.open_file_button)
         layout.addStretch()  # Push everything to the top
 
 

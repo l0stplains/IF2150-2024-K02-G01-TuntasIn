@@ -1,8 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from src.ui.add_file_ui import AddFileUI
-from src.ui.add_file_ui_alt import AddFileUIAlt
-from src.controllers.home_controller import HomeController
+from src.controllers.add_file_controller import AddFileController
 from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 # from src.setup_database import setup_database  # Tambahkan ini
@@ -25,6 +24,7 @@ class Add_File_Main(QMainWindow):
         
         # Add home widget
         self.add_file_ui = AddFileUI()
+        self.add_file_controller = AddFileController(self.add_file_ui)
         # self.home_controller = HomeController(self.home_ui)
         layout.addWidget(self.add_file_ui)
         

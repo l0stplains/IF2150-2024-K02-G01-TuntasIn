@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from src.ui.folder_ui import FileFolderUI
-from src.controllers.home_controller import HomeController
+from src.ui.add_file_ui import AddFileUI
+from src.controllers.folder_controller import FolderController
 from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 # from src.setup_database import setup_database  # Tambahkan ini
@@ -24,7 +25,8 @@ class Folder_Main(QMainWindow):
         
         # Add home widget
         self.folder_ui = FileFolderUI()
-        # self.home_controller = HomeController(self.home_ui)
+        self.add_file_ui = AddFileUI()
+        self.folder_controller = FolderController(self.folder_ui, self.add_file_ui)
         layout.addWidget(self.folder_ui)
         
         # Set window properties

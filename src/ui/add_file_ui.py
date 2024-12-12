@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit
+from src.ui.folder_ui import FileFolderUI
 
 class AddFileUI(QWidget):
     def __init__(self):
@@ -182,6 +183,12 @@ class AddFileUI(QWidget):
         self.horizontalLayout_3.addWidget(self.pushButtonTambah)
 
         self.retranslateUi()
+    
+    def backToPreviousWindow(self):
+        # Close the current window and show the previous window (FolderUI)
+        self.close()
+        self.previous_window = FileFolderUI()  # Assuming you have a FolderUI class
+        self.previous_window.show()
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
