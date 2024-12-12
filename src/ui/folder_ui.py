@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QGridLayout, QHBoxLayout, QWidget
-from PyQt5.QtWidgets import QLabel, QPushButton
+from PyQt5.QtWidgets import QLabel, QPushButton, QScrollArea
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+
 
 class FileFolderUI(QMainWindow):
     def __init__(self):
@@ -21,11 +22,11 @@ class FileFolderUI(QMainWindow):
         button_layout = QHBoxLayout()
         add_button = QPushButton("Add")
         filter_button = QPushButton("Filter")
-        
-        button_layout.addStretch()  # Push buttons to the righy
+
+        button_layout.addStretch()  # Push buttons to the right
         add_button.setFixedWidth(120)
         filter_button.setFixedWidth(120)
-        
+
         # Style buttons (optional)
         add_button.setStyleSheet("""
             QPushButton {
@@ -60,9 +61,22 @@ class FileFolderUI(QMainWindow):
         # Add button layout to main layout
         main_layout.addLayout(button_layout)
 
-        # Card Grid Layout
-        grid_layout = QGridLayout()
+        # Scrollable area for the grid
+        scroll_area = QScrollArea(self)
+        scroll_area.setWidgetResizable(True)
+
+        # Container for the grid layout
+        grid_container = QWidget()
+        grid_layout = QGridLayout(grid_container)
         grid_layout.setSpacing(20)  # Add spacing between cards
+        
+        # Set the stylesheet for grid_container
+        grid_container.setStyleSheet("""
+            QWidget {
+                background: #dce0f5;
+                border-radius: 10px;      /* Optional rounded corners */
+            }
+        """)
 
         # Add some cards
         cards = [
@@ -70,6 +84,8 @@ class FileFolderUI(QMainWindow):
             ("Title 2", "This is the second card.", "img/txt.png"),
             ("Title 3", "This is the third card.", "img/word.png"),
             ("Title 4", "This is the fourth card.", "img/pdf.png"),
+            ("Title 5", "This is the fifth card.", "img/txt.png"),
+            ("Title 6", "This is the sixth card.", "img/word.png"),
         ]
 
         row, col = 0, 0
@@ -82,22 +98,26 @@ class FileFolderUI(QMainWindow):
                 col = 0
                 row += 1
 
-        # Add grid layout to main layout
-        main_layout.addLayout(grid_layout)
+        # Set grid container as the widget for the scroll area
+        scroll_area.setWidget(grid_container)
+
+        # Add scroll area to main layout
+        main_layout.addWidget(scroll_area)
+
 
 class Card(QWidget):
     def __init__(self, title: str, description: str, icon_path: str, parent=None):
         super().__init__(parent)
         self.setFixedSize(200, 250)  # Set the card's size
-        
-        # Add shadow effect
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(15)  # Adjust the blur radius
-        shadow.setXOffset(5)  # Horizontal offset
-        shadow.setYOffset(5)  # Vertical offset
-        shadow.setColor(Qt.gray)  # Shadow color
-        self.setGraphicsEffect(shadow)
-        
+
+        # # Add shadow effect
+        # shadow = QGraphicsDropShadowEffect(self)
+        # shadow.setBlurRadius(15)  # Adjust the blur radius
+        # shadow.setXOffset(5)  # Horizontal offset
+        # shadow.setYOffset(5)  # Vertical offset
+        # shadow.setColor(Qt.gray)  # Shadow color
+        # self.setGraphicsEffect(shadow)
+
         self.setStyleSheet("""
             QWidget {   
                 border: 1px solid #ccc;
