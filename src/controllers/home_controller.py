@@ -1,3 +1,4 @@
+
 import sqlite3
 from datetime import datetime
 from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
@@ -133,7 +134,7 @@ class HomeController:
         ORDER BY t.due_date DESC
         """
         
-        # cursor.execute(query, tuple(params))
+        cursor.execute(query, tuple(params))
         tasks = cursor.fetchall()
         
         for task in tasks:
