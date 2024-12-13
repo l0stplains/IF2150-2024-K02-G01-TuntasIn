@@ -33,8 +33,8 @@ class FilterDialog(QDialog):
         status_layout.addWidget(QLabel("Status:"))
         self.status_combo = QComboBox()
         self.status_combo.addItem("All Status", None)
-        self.status_combo.addItem("Selesai", "Selesai")
-        self.status_combo.addItem("Belum Selesai", "Belum Selesai")
+        self.status_combo.addItem("Completed", "Completed")
+        self.status_combo.addItem("Not Completed", "Not Completed")
         status_layout.addWidget(self.status_combo)
         layout.addLayout(status_layout)
         

@@ -50,7 +50,7 @@ class TaskWidget(QFrame):
         edit_btn.setObjectName("editButton")
         edit_btn.clicked.connect(lambda: self.edit_clicked.emit(self.task_id))
         
-        delete_btn = QPushButton("Hapus")
+        delete_btn = QPushButton("Delete")
         delete_btn.setObjectName("deleteButton")
         delete_btn.clicked.connect(lambda: self.delete_clicked.emit(self.task_id))
         
@@ -85,7 +85,7 @@ class HomeUI(QWidget):
         self.search_input.setPlaceholderText("Search tasks...")
         self.search_input.setObjectName("searchInput")
         
-        self.add_btn = QPushButton("Tambah")
+        self.add_btn = QPushButton("Add")
         self.add_btn.setObjectName("addButton")
         self.filter_btn = QPushButton("Filter")
         self.filter_btn.setObjectName("filterButton")
