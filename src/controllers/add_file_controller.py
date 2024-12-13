@@ -37,7 +37,7 @@ class AddFileController:
             self.ui, 
             "Select File", 
             "", 
-            "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
+            "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)  "
             )
         if file_name:
             QMessageBox.information(self.ui, "File Selected", f"File '{file_name}' selected!")

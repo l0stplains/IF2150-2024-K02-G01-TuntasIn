@@ -33,7 +33,7 @@ class FolderController:
         # Logic to select a file
         file_path, _ = QFileDialog.getOpenFileName(
             self.add_file_ui, "Select File", "", 
-            "Images (*.png *.jpg *.jpeg);;Documents (*.pdf *.docx *.txt);;All Files (*.*)"
+            "Images (*.png *.jpg *.jpeg);;Documents (*.pdf *.docx *.txt);"
         )
         if file_path:
             # Add the file to the FolderUI
