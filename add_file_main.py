@@ -1,15 +1,15 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from src.ui.home_ui import HomeUI
-from src.controllers.home_controller import HomeController
+from src.ui.add_file_ui import AddFileUI
+from src.controllers.add_file_controller import AddFileController
 from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 # from src.setup_database import setup_database  # Tambahkan ini
 
-class MainWindow(QMainWindow):
+class Add_File_Main(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("TuntasIn")
+        self.setWindowTitle("Tuntasin")
         self.setup_ui()
         
     def setup_ui(self):
@@ -23,15 +23,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.navbar)
         
         # Add home widget
-        self.home_ui = HomeUI()
-        self.home_controller = HomeController(self.home_ui)
-        layout.addWidget(self.home_ui)
+        self.add_file_ui = AddFileUI()
+        self.add_file_controller = AddFileController(self.add_file_ui)
+        # self.home_controller = HomeController(self.home_ui)
+        layout.addWidget(self.add_file_ui)
         
         # Set window properties
-        self.setMinimumSize(1280, 720)
+        self.setMinimumSize(800, 600)
         
         # Connect navbar signals
-        self.navbar.home_clicked.connect(lambda: self.home_ui.show())
+        # self.navbar.home_clicked.connect(lambda: self.home_ui.show())
         self.navbar.folder_clicked.connect(self.show_folder)
         self.navbar.calendar_clicked.connect(self.show_calendar)
         self.navbar.progress_clicked.connect(self.show_progress)
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print("Warning: style.qss not found")
     
-    window = MainWindow()
+    window = Add_File_Main()
     window.show()
     
     sys.exit(app.exec_())
