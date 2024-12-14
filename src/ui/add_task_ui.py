@@ -1,81 +1,70 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget
 
-
-class AddTaskUI(object):
-    def __init__(self,AddTask):
+class AddTaskUI(QWidget):
+    def __init__(self):
         super().__init__()
-        self.setupUi(AddTask)
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(1280, 975)
-        self.widget = QtWidgets.QWidget(Dialog)
+        self.setupUi()
+
+    def setupUi(self):
+        self.setObjectName("MainWindow")
+        self.resize(1280, 975)
+        self.widget = QtWidgets.QWidget(self)
         self.widget.setGeometry(QtCore.QRect(0, 0, 1280, 975))
         self.widget.setMinimumSize(QtCore.QSize(1280, 971))
         self.widget.setMaximumSize(QtCore.QSize(1000000, 1000000))
         self.widget.setAcceptDrops(True)
         self.widget.setAutoFillBackground(False)
         self.widget.setStyleSheet("QWidget#widget{\n"
-"background-color: rgb(255, 255,255);\n"
-"font-family: \'Segoe UI\', Arial;\n"
-"\n"
-"}\n"
-"\n"
-"QLineEdit, QTextEdit{\n"
-"background-color: rgb(217, 217, 217);\n"
-"border-radius: 10px;\n"
-"padding: 5px;\n"
-"}\n"
-"\n"
-"QLabel{\n"
-"font-size: 20px;\n"
-"font-weight: bold ;\n"
-"font-family: \'Segoe UI\', Arial;\n"
-"color: #7E57C2 ;\n"
-"}\n"
-"\n"
-"QDateEdit{\n"
-"    background-color: rgb(217, 217, 217);\n"
-"}\n"
-"\n"
-"\n"
-"")
+                                  "background-color: rgb(255, 255,255);\n"
+                                  "font-family: 'Segoe UI', Arial;\n"
+                                  "}\n"
+                                  "QLineEdit, QTextEdit{\n"
+                                  "background-color: rgb(217, 217, 217);\n"
+                                  "border-radius: 10px;\n"
+                                  "padding: 5px;\n"
+                                  "}\n"
+                                  "QLabel{\n"
+                                  "font-size: 20px;\n"
+                                  "font-weight: bold ;\n"
+                                  "font-family: 'Segoe UI', Arial;\n"
+                                  "color: #7E57C2 ;\n"
+                                  "}\n"
+                                  "QDateEdit{\n"
+                                  "background-color: rgb(217, 217, 217);\n"
+                                  "}\n")
         self.widget.setInputMethodHints(QtCore.Qt.ImhNone)
-        self.widget.setObjectName("widget")
+        
         self.label_2 = QtWidgets.QLabel(self.widget)
         self.label_2.setGeometry(QtCore.QRect(100, 150, 91, 41))
-        self.label_2.setStyleSheet("")
         self.label_2.setObjectName("label_2")
+        
         self.label = QtWidgets.QLabel(self.widget)
         self.label.setGeometry(QtCore.QRect(480, 10, 341, 61))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(-1)
         font.setBold(True)
-        font.setItalic(False)
-        font.setWeight(75)
-        font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.label.setFont(font)
-        self.label.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
-        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label.setStyleSheet("   font-size: 40px;\n"
-"   font-weight: bold;\n"
-"   color: #7E57C2;\n"
-"   padding: 12px 20px;\n"
-"   border: none;\n"
-"")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setStyleSheet("font-size: 40px;\n"
+                                 "font-weight: bold;\n"
+                                 "color: #7E57C2;\n"
+                                 "padding: 12px 20px;\n"
+                                 "border: none;\n")
         self.label.setObjectName("label")
+        
         self.description = QtWidgets.QTextEdit(self.widget)
         self.description.setGeometry(QtCore.QRect(100, 300, 1061, 111))
-        self.description.setStyleSheet("")
         self.description.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.description.setObjectName("description")
+        
         self.label_3 = QtWidgets.QLabel(self.widget)
         self.label_3.setGeometry(QtCore.QRect(100, 260, 111, 41))
-        self.label_3.setStyleSheet("")
         self.label_3.setObjectName("label_3")
+
         self.label_6 = QtWidgets.QLabel(self.widget)
         self.label_6.setGeometry(QtCore.QRect(100, 620, 91, 41))
         self.label_6.setStyleSheet("")
@@ -189,21 +178,17 @@ class AddTaskUI(object):
         self.date.setCalendarPopup(True)
         self.date.setObjectName("date")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi()
+        QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_2.setText(_translate("Dialog", "Nama"))
-        self.label.setText(_translate("Dialog", "Form TuntasIn"))
-        self.description.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.description.setPlaceholderText(_translate("Dialog", "Deskripsikan tugas anda..."))
-        self.label_3.setText(_translate("Dialog", "Deskripsi"))
+        self.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label_2.setText(_translate("MainWindow", "Nama"))
+        self.label.setText(_translate("MainWindow", "Form TuntasIn"))
+        self.description.setHtml(_translate("MainWindow", "<html><body style=\"font-family: 'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\"> <p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.description.setPlaceholderText(_translate("MainWindow", "Deskripsikan tugas anda..."))
+        self.label_3.setText(_translate("MainWindow", "Deskripsi"))
         self.label_6.setText(_translate("Dialog", "Tag"))
         self.pushButton.setText(_translate("Dialog", "Lampirkan"))
         self.label_7.setText(_translate("Dialog", "File"))

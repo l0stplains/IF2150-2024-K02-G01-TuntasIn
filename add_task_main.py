@@ -25,7 +25,7 @@ class Add_Task_Main(QMainWindow):
         scroll_area.setContentsMargins(0, 0, 0, 0) 
         layout.addWidget(scroll_area)
 
-        self.add_task_dialog = QDialog(self)  
+        self.add_task_dialog = QWidget(self)  
         self.add_task_ui = AddTaskUI(self.add_task_dialog)  
         self.add_task_dialog.setMinimumSize(1250, 975)  
 
