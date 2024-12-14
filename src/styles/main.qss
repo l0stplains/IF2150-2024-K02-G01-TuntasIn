@@ -1,31 +1,632 @@
-/* styles.qss */
+/* Main window */
 QMainWindow {
-    background-color: #f5f5f5;
+   background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                              stop:0 #F5F7FA, stop:1 #E8EAF6);
 }
 
-QPushButton {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
+/* Navbar styles */
+#navBrand {
+   font-size: 24px;
+   font-weight: bold;
+   color: #7E57C2;
+   padding: 12px 20px;
+   border: none;
+   background: transparent;
+   font-family: 'Segoe UI', Arial;
+   letter-spacing: 1px;
 }
 
-QPushButton:hover {
-    background-color: #0056b3;
+#navBrand:hover {
+   color: #9575CD;
 }
 
-QLineEdit {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
+#navButton {
+   background: transparent;
+   border: none;
+   padding: 12px 24px;
+   margin: 0 4px;
+   color: #5C6BC0;
+   font-size: 14px;
+   font-weight: 500;
+   border-radius: 6px;
+}
+
+#navButton:hover {
+   background-color: #7E57C2;
+   color: white;
+}
+
+#navButton:pressed {
+   background-color: #673AB7;
+}
+
+/* Search bar */
+#searchInput {
+   padding: 12px 20px;
+   border: 2px solid #E8EAF6;
+   border-radius: 8px;
+   margin: 16px;
+   font-size: 14px;
+   background-color: white;
+   min-width: 300px;
+   color: #2C3E50;
+}
+
+#searchInput:focus {
+   border-color: #7E57C2;
+}
+
+#searchInput::placeholder {
+   color: #B0BEC5;
+}
+
+/* Task Widget */
+#taskWidget {
+   background: white;
+   border-radius: 10px;
+   padding: 16px;
+   margin: 8px 16px;
+   border: 1px solid #E8EAF6;
+}
+
+#taskWidget:hover {
+   background: #F8F9FE;
+}
+
+/* Status Labels */
+#statusLabel {
+   padding: 6px 12px;
+   border-radius: 20px;
+   font-weight: bold;
+   font-size: 12px;
+}
+
+#statusLabel[text="Completed"] {
+   background-color: #66BB6A;
+   color: white;
+}
+
+#statusLabel[text="Not Completed"] {
+   background-color: #FFCA28;
+   color: #5D4037;
+}
+
+/* Category Labels */
+#categoryLabel {
+   background-color: #5C6BC0;
+   color: white;
+   padding: 4px 10px;
+   border-radius: 4px;
+   font-size: 12px;
+   font-weight: 500;
+}
+
+/* Tag Labels */
+#tagLabel {
+   background-color: #E8EAF6;
+   color: #5C6BC0;
+   padding: 4px 8px;
+   margin: 0 4px;
+   border-radius: 4px;
+   font-size: 11px;
+}
+
+/* Buttons */
+#addButton, #filterButton {
+   background-color: #7E57C2;
+   color: white;
+   border: none;
+   padding: 10px 20px;
+   border-radius: 6px;
+   font-weight: bold;
+   margin: 0 8px;
+}
+
+#addButton:hover, #filterButton:hover {
+   background-color: #673AB7;
+}
+
+#addButton:pressed, #filterButton:pressed {
+   background-color: #5E35B1;
+}
+
+#editButton {
+   background-color: #5C6BC0;
+   color: white;
+   border: none;
+   padding: 8px 16px;
+   border-radius: 6px;
+   margin-right: 8px;
+}
+
+#editButton:hover {
+   background-color: #3F51B5;
+}
+
+#deleteButton {
+   background-color: #EF5350;
+   color: white;
+   border: none;
+   padding: 8px 16px;
+   border-radius: 6px;
+}
+
+#deleteButton:hover {
+   background-color: #E53935;
+}
+
+/* Due Date Label */
+#dueDateLabel {
+   color: #7E57C2;
+   font-size: 12px;
+   font-style: italic;
+}
+
+/* Scroll Area */
+QScrollArea {
+   border: none;
+   background: transparent;
+}
+
+QScrollBar:vertical {
+   border: none;
+   background: #E8EAF6;
+   width: 10px;
+   margin: 0;
+}
+
+QScrollBar::handle:vertical {
+   background: #B39DDB;
+   border-radius: 5px;
+   min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+   background: #9575CD;
+}
+
+/* Filter Dialog */
+QDialog {
+   background-color: white;
+   border-radius: 10px;
+   min-width: 400px;
+   padding: 20px;
+}
+
+QDialog QLabel {
+   color: #2C3E50;
+   font-weight: 500;
+   font-size: 14px;
+   margin-bottom: 4px;
+}
+
+QDialog QComboBox {
+   padding: 10px;
+   border: 2px solid #E8EAF6;
+   border-radius: 6px;
+   min-width: 250px;
+   color: #2C3E50;
+   font-size: 13px;
+   background-color: white;
+}
+
+QDialog QComboBox:hover {
+   border-color: #B39DDB;
+}
+
+QDialog QComboBox:focus {
+   border-color: #7E57C2;
+}
+
+QDialog QComboBox::drop-down {
+   border: none;
+   padding-right: 10px;
+}
+
+QDialog QComboBox::down-arrow {
+   image: none;
+   border: none;
+}
+
+/* Filter Dialog Buttons */
+QDialog QPushButton {
+   padding: 10px 20px;
+   border-radius: 6px;
+   font-weight: bold;
+   min-width: 100px;
+   font-size: 13px;
+}
+
+QDialog QPushButton[text="Apply"] {
+   background-color: #7E57C2;
+   color: white;
+}
+
+QDialog QPushButton[text="Apply"]:hover {
+   background-color: #673AB7;
+}
+
+QDialog QPushButton[text="Clear"] {
+   background-color: #E8EAF6;
+   color: #5C6BC0;
+}
+
+QDialog QPushButton[text="Clear"]:hover {
+   background-color: #C5CAE9;
+}
+
+QDialog QPushButton[text="Cancel"] {
+   background-color: #EF5350;
+   color: white;
+}
+
+QDialog QPushButton[text="Cancel"]:hover {
+   background-color: #E53935;
+}
+
+/* Message Box */
+QMessageBox {
+   background-color: white;
+}
+
+QMessageBox QPushButton {
+   padding: 8px 16px;
+   border-radius: 6px;
+   min-width: 100px;
+   background-color: #7E57C2;
+   color: white;
+}
+
+#navButton:pressed {
+   background-color: #673AB7;
+}
+
+/* Search bar */
+#searchInput {
+   padding: 12px 20px;
+   border: 2px solid #E8EAF6;
+   border-radius: 8px;
+   margin: 16px;
+   font-size: 14px;
+   background-color: white;
+   min-width: 300px;
+   color: #2C3E50;
+}
+
+#searchInput:focus {
+   border-color: #7E57C2;
+}
+
+#searchInput::placeholder {
+   color: #B0BEC5;
+}
+
+/* Task Widget */
+#taskWidget {
+   background: white;
+   border-radius: 10px;
+   padding: 16px;
+   margin: 8px 16px;
+   border: 1px solid #E8EAF6;
+}
+
+#taskWidget:hover {
+   background: #F8F9FE;
+}
+
+/* Status Labels */
+#statusLabel {
+   padding: 6px 12px;
+   border-radius: 20px;
+   font-weight: bold;
+   font-size: 12px;
+}
+
+#statusLabel[text="Completed"] {
+   background-color: #66BB6A;
+   color: white;
+}
+
+#statusLabel[text="Not Completed"] {
+   background-color: #FFCA28;
+   color: #5D4037;
+}
+
+/* Filter Dialog Buttons */
+QDialog QPushButton {
+   padding: 10px 20px;
+   border-radius: 6px;
+   font-weight: bold;
+   min-width: 100px;
+   font-size: 13px;
+}
+
+QDialog QPushButton[text="Apply"] {
+   background-color: #7E57C2;
+   color: white;
+}
+
+QDialog QPushButton[text="Apply"]:hover {
+   background-color: #673AB7;
+}
+
+QDialog QPushButton[text="Clear"] {
+   background-color: #E8EAF6;
+   color: #5C6BC0;
+}
+
+QDialog QPushButton[text="Clear"]:hover {
+   background-color: #C5CAE9;
+}
+
+QDialog QPushButton[text="Cancel"] {
+   background-color: #EF5350;
+   color: white;
+}
+
+QDialog QPushButton[text="Cancel"]:hover {
+   background-color: #E53935;
+}
+
+/* Message Box */
+QMessageBox {
+   background-color: white;
+}
+
+QMessageBox QPushButton {
+   padding: 8px 16px;
+   border-radius: 6px;
+   min-width: 100px;
+   background-color: #7E57C2;
+   color: white;
+}
+
+QMessageBox QPushButton:hover {
+   background-color: #673AB7;
+}
+
+#appLabel {
+    font-size: 32px;
+   font-weight: bold;
+   color: #7E57C2;
+   padding: 12px 20px;
+   border: none;
+   background: transparent;
+   font-family: 'Segoe UI', Arial;
+   letter-spacing: 1px;
+}
+
+/* Fokus outline berwarna ungu untuk semua input */
+QLineEdit:focus, QComboBox:focus {
+    border: 2px solid purple;
+    border-radius: 8px;
     background: #fff;
 }
 
-QListWidget {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    background: #f9f9f9;
+/* Gaya untuk tombol OK */
+#okButton {
+    background-color: purple;
+    color: white;
+    border: 2px solid purple;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Gaya hover untuk tombol OK */
+#okButton:hover {
+    background-color: #d1a3ff; /* Ungu pudar */
+    border-color: #d1a3ff;
+}
+
+/* Gaya untuk tombol Cancel */
+#cancelButton {
+    background-color: red;
+    color: white;
+    border: 2px solid red;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Gaya hover untuk tombol Cancel */
+#cancelButton:hover {
+    background-color: #ff7f7f; /* Merah pudar */
+    border-color: #ff7f7f;
+}
+
+/* Styling untuk label navigasi */
+#homeLabel, #folderLabel, #calendarLabel, #progressLabel {
+    background: transparent;
+   border: none;
+   padding: 12px 24px;
+   margin: 0 4px;
+   color: #5C6BC0; /* Warna biru */
+   font-size: 16px;
+   font-weight: 500;
+   border-radius: 6px;
+}
+
+/* Efek hover untuk label navigasi */
+#homeLabel:hover, #folderLabel:hover, #calendarLabel:hover, #progressLabel:hover {
+    color: #FF8800;
+    text-decoration: underline;
+}
+
+/* Styling untuk QLabel secara umum 
+QLabel {
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    color: #800080;
+    padding: 6px 10px;
+}
+*/
+
+/* Gaya umum untuk QPushButton */
+QPushButton {
+    background-color: #FF8800;
+    color: white;
+    border: 2px solid #cc6f00;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Efek hover untuk tombol umum */
+QPushButton:hover {
+    background-color: #ff9933;
+    border-color: #b25900;
+}
+
+/* Style elemen chart */
+QChartView {
+    background-color: white;
+    padding: 10px;
+}
+
+/* Perbesar elemen dialog */
+QDialogButtonBox QPushButton {
+    font-size: 14px;
+}
+
+/* Gaya untuk tombol "Tampilan" dengan latar belakang pink */
+#viewButton {
+    background-color: #ff80b3;  /* Pink gelap */
+    color: white;
+    border: 2px solid #ff4d94;  /* Warna border pink gelap */
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Efek hover untuk tombol "Tampilan" dengan pink pudar */
+#viewButton:hover {
+    background-color: #ffb3d9;  /* Pink pudar saat hover */
+    border-color: #ff80b3;  /* Warna border pink pudar saat hover */
+}
+
+
+/* Efek hover untuk tombol "Periode" dengan warna lain */
+#periodButton:hover {
+    background-color: #ff9933;  /* Warna lain untuk hover pada Periode */
+    border-color: #b25900;  /* Warna border hover Periode */
+}
+
+#Tahun {
+    color: black; 
+    font-weight: bold; 
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+#Bulan {
+    color: black; 
+    font-weight: bold; 
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* CALENDAR */
+QScrollBar:horizontal {
+   border: none;
+   background: #E8EAF6;
+   height: 10px;
+   margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+   background: #B39DDB;
+   border-radius: 5px;
+   min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+   background: #9575CD;
+}
+
+QLabel[dayHeader="true"] {
+   font-size: 12px;
+   font-weight: bold;
+   color: #5C6BC0;
+   min-height: 20px;
+   max-height: 20px;
+   background: #E8EAF6;
+   padding: 10px;
+   border-radius: 5px;
+}
+QWidget#dayCell {
+   background: white;
+   max-height: 160px;
+   max-width:200px;
+   border: 1px solid #E8EAF6;
+   border-radius: 10px;
+}
+QLabel#taskLabel {
+   background: #FFFFFF;
+   border: 1px solid #FFCA28;
+   border-radius: 5px;
+   padding: 5px;
+   min-height: 15px;
+   max-height: 15px;
+   margin: 1px 0;
+   font-size: 12px;
+}
+
+QLabel#taskLabelLate {
+   background: #FFFFFF;
+   border: 1px solid red;
+   border-radius: 5px;
+   padding: 5px;
+   min-height: 15px;
+   max-height: 15px;
+   margin: 1px 0;
+   font-size: 12px;
+}
+QLabel#taskLabelCompleted {
+   background: #FFFFFF;
+   border: 1px solid #66BB6A;
+   border-radius: 5px;
+   padding: 5px;
+   min-height: 15px;
+   max-height: 15px;
+   margin: 1px 0;
+   font-size: 12px;
+}
+QPushButton#addTaskButton {
+   background: #7E57C2;
+   color: white;
+   font-weight: bold;
+   border-radius: 5px;
+   min-width: 30px;
+   max-width: 30px;
+   min-height: 30px;
+   max-height: 30px;
+}
+QPushButton#addTaskButton:hover {
+   background: #673AB7;
+}
+#dayTaskScrollArea{
+   max-width: 100%;
+}
+#calendarNavButtonPrev, #calendarNavButtonNext {
+   background-color: #7E57C2;
+   color: white;
+   border: none;
+   padding: 8px 16px;
+   max-height: 16px;
+   border-radius: 6px;
+   font-size: 20px;
+   font-weight: bold;
+   margin: 0 8px;
+}
+
+#calendarNavButtonPrev:hover, #calendarNavButtonNext:hover {
+   background-color: #673AB7;
+}
+
+#calendarNavButtonPrev:pressed, #calendarNavButtonNext:pressed {
+   background-color: #5E35B1;
 }
 
