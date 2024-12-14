@@ -4,6 +4,7 @@ from src.ui.calendar_ui import CalendarUi
 from src.ui.progress_ui import ProgressWindow
 from src.controllers.home_controller import HomeController
 from src.components.navbar import NavBar
+from src.controllers.calendar_controller import CalendarController
 from src.controllers.progress_controller import ProgressController
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QStackedWidget
 from PyQt5.QtCore import Qt

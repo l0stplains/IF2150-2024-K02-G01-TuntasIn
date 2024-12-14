@@ -1,16 +1,15 @@
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QGridLayout, QScrollArea, QFrame, QMessageBox, QDialog, QFormLayout,
-    QLineEdit, QDesktopWidget
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QGridLayout, QScrollArea, QDesktopWidget
 )
 from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtGui import QFont
-import sqlite3
+from src.controllers.calendar_controller import CalendarController
 
 class CalendarUi(QWidget):
     def __init__(self, db_path):
         super().__init__()
-        self.db_path = db_path
+        self.controller = CalendarController(db_path)
         self.current_date = QDate.currentDate()
         self.init_ui()
 
@@ -21,13 +20,13 @@ class CalendarUi(QWidget):
 
         # Navigation bar
         nav_layout = QHBoxLayout()
-        self.prev_button = QPushButton("◀")
+        self.prev_button = QPushButton("\u25C0")
         self.prev_button.setObjectName("calendarNavButtonPrev")
         self.prev_button.clicked.connect(self.previous_month)
         self.month_label = QLabel(self.current_date.toString("MMMM yyyy"))
         self.month_label.setAlignment(Qt.AlignCenter)
         self.month_label.setFont(QFont('Arial', 12, QFont.Bold))
-        self.next_button = QPushButton("▶")
+        self.next_button = QPushButton("\u25B6")
         self.next_button.setObjectName("calendarNavButtonNext")
         self.next_button.clicked.connect(self.next_month)
 
@@ -43,13 +42,11 @@ class CalendarUi(QWidget):
         self.calendar_grid.setSpacing(5)
 
         # Add widgets to main layout
-        main_layout.addWidget(nav_container)
+        main_layout.addWidget(nav_container, alignment=Qt.AlignRight)
         main_layout.addLayout(self.calendar_grid)
 
         self.setLayout(main_layout)
         self.populate_calendar()
-
-        # Apply custom styling
         self.setStyleSheet(self.get_stylesheet())
 
     def center_window(self):
@@ -72,8 +69,6 @@ class CalendarUi(QWidget):
             header_label.setAlignment(Qt.AlignCenter)
             header_label.setProperty("dayHeader", True)
             self.calendar_grid.addWidget(header_label, 0, col)
-            self.calendar_grid.setRowStretch(0, 1)
-            self.calendar_grid.setColumnStretch(col, 1)
 
         # Calculate days
         first_day = QDate(self.current_date.year(), self.current_date.month(), 1)
@@ -85,8 +80,6 @@ class CalendarUi(QWidget):
         for day in range(1, num_days + 1):
             day_widget = self.create_day_cell(day)
             self.calendar_grid.addWidget(day_widget, row, col)
-            self.calendar_grid.setRowStretch(row, 1)
-            self.calendar_grid.setColumnStretch(col, 1)
             col += 1
             if col > 6:
                 col = 0
@@ -113,7 +106,7 @@ class CalendarUi(QWidget):
 
         # Add tasks to task list
         date = QDate(self.current_date.year(), self.current_date.month(), day).toString("yyyy-MM-dd")
-        tasks = self.get_tasks_for_date(date)
+        tasks = self.controller.get_tasks_for_date(date)
         for task in tasks:
             task_label = QLabel(task)
             task_label.setObjectName("taskLabel")
@@ -124,27 +117,6 @@ class CalendarUi(QWidget):
         day_layout.setObjectName("dayTaskScrollArea")
 
         return day_widget
-
-    def get_tasks_for_date(self, date):
-        try:
-            conn = sqlite3.connect(self.db_path)
-            cursor = conn.cursor()
-            query = """
-SELECT t.id, t.name, t.category, t.status, t.due_date, GROUP_CONCAT(tag.name) AS tags
-FROM tasks t
-LEFT JOIN tags tag ON t.id = tag.task_id
-WHERE t.due_date = ?
-GROUP BY t.id;
-"""
-            cursor.execute(query, (date,))
-            # Fetch and print the results
-           
-            tasks = [row[1] for row in cursor.fetchall()]
-            conn.close()
-            return tasks
-        except sqlite3.Error as e:
-            print(f"Database Error: {e}")
-            return []
 
     def previous_month(self):
         self.current_date = self.current_date.addMonths(-1)
@@ -246,6 +218,7 @@ GROUP BY t.id;
                 color: white;
                 border: none;
                 padding: 8px 16px;
+                max-height: 16px;
                 border-radius: 6px;
                 font-size: 20px;
                 font-weight: bold;
