@@ -20,13 +20,13 @@
 * [Features](#features)  
 * [Project Structure](#project-structure)
 * [Prerequisites](#prerequisites)
-* [Development Workflow](#development-workflow)
-* [Database](#database)  
 * [Getting Started](#getting-started)   
    * [Clone the Repository](#1-clone-the-repository)  
    * [Set Up the Environment](#2-set-up-the-environment)  
    * [Install Dependencies](#3-install-dependencies)  
    * [Run the Application](#4-run-the-application)
+* [Development Workflow](#development-workflow)
+* [Database](#database)  
 * [Contributors](#contributors)  
 
 ---
@@ -41,7 +41,12 @@
   ![image](https://github.com/user-attachments/assets/b8832bcd-e763-4307-a56c-ffbaeb6993fc)
 
 - 🔔 **Notifications**: Stay updated with task deadlines and reminders.
+  ![image](https://github.com/user-attachments/assets/e4d4034a-1e2b-477d-8aaa-08ad14d749da)
+
 - ☑️ **Add, Edit, and View Task**: Create new tasks or update task.
+![image](https://github.com/user-attachments/assets/2bb03f54-25b9-43a4-a010-2a465d6a64b1)
+
+
 - 🗃️ **Add and View Files (Folder)**: Upload related files or view uploaded file.
 ![image](https://github.com/user-attachments/assets/1c176a80-571b-4d1d-a6db-711142555dff)
 
@@ -64,43 +69,13 @@ TuntasIn/
 ├── assets/                    # Static files like icons, images, or styles
 ├── src/
 │   ├── ui/                    # UI files
-│   │   ├── home_ui.py         # Home screen
-│   │   ├── folder_ui.py       # Folder view
-│   │   ├── calendar_ui.py     # Calendar view
-│   │   ├── add_task_ui.py     # Add Task screen
-│   │   ├── progress_ui.py     # Progress screen
-│   │   ├── add_file_ui.py     # Add File screen
-│   │   ├── task_view_ui.py    # Task Detail View
-│   │   ├── edit_view_ui.py    # Edit Task View
-│   │   ├── notification_ui.py # Notification modal
-│   └── components/            # Reusable UI components
-│       ├── task_item.py       # Task item widget
-│       ├── folder_item.py     # Folder item widget
-│       ├── notification.py    # Notification widget
+│   ├── components/            # Reusable UI components
 │   ├── controllers/           # Logic and interactions
-│   │   ├── home_controller.py
-│   │   ├── folder_controller.py
-│   │   ├── calendar_controller.py
-│   │   ├── add_task_controller.py
-│   │   ├── progress_controller.py
-│   │   ├── add_file_controller.py
-│   │   ├── task_view_controller.py
-│   │   ├── edit_view_controller.py
-│   │   ├── notification_controller.py
 │   ├── models/                # Data models
-│   │   ├── task.py            # Task model
-│   │   ├── folder.py          # Folder model
-│   │   ├── calendar.py        # Calendar model
-│   │   ├── progress.py        # Progress model
 │   └── utils/                 # Utility functions
-│       ├── database.py        # SQLite database handler
-│       ├── date_utils.py      # Date and time utilities
-│       ├── config.py          # Configurations (e.g., theme, colors)
-│       ├── notifications.py   # Notification logic
 └── tests/                     # Unit and integration tests
-    ├── test_models.py         # Tests for models
-    ├── test_controllers.py    # Tests for controllers
-    ├── test_ui.py             # Tests for UI behavior
+├── doc/                       # In-app screenshoots
+└── img/                       # Unit and integration tests
 
 ```
 
@@ -109,6 +84,42 @@ TuntasIn/
 ## **Prerequisites**
 - Python 3.8 or higher
 - PyQt5 (automatically installed via `requirements.txt`)
+
+---
+## **Getting Started**
+
+Follow these steps to set up and run the project:
+
+### **1. Clone the Repository**
+```bash
+git clone https://github.com/l0stplains/IF2150-2024-K02-G01-TuntasIn.git
+cd IF2150-2024-K02-G01-TuntasIn
+```
+
+### **2. Set Up the Environment**
+Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # For Linux/macOS
+venv\Scripts\activate     # For Windows
+```
+
+### **3. Install Dependencies**
+Install the required Python libraries:
+```bash
+pip install -r requirements.txt
+```
+
+If it's your first time cloning this repository, install the required PyQt5 Tools:
+```bash
+pip install pyqt5-tools
+```
+
+### **4. Run the Application**
+Start the application by running:
+```bash
+python main.py
+```
 
 ---
 
@@ -162,42 +173,7 @@ This application uses **SQLite** for task and folder management. The database sc
 - **Task to Tags**: One-to-Many (One Task can have multiple Tags).
 ---
 
-## **Getting Started**
 
-Follow these steps to set up and run the project:
-
-### **1. Clone the Repository**
-```bash
-git clone https://github.com/l0stplains/IF2150-2024-K02-G01-TuntasIn.git
-cd IF2150-2024-K02-G01-TuntasIn
-```
-
-### **2. Set Up the Environment**
-Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # For Linux/macOS
-venv\Scripts\activate     # For Windows
-```
-
-### **3. Install Dependencies**
-Install the required Python libraries:
-```bash
-pip install -r requirements.txt
-```
-
-If it's your first time cloning this repository, install the required PyQt5 Tools:
-```bash
-pip install pyqt5-tools
-```
-
-### **4. Run the Application**
-Start the application by running:
-```bash
-python main.py
-```
-
----
 
 
 
