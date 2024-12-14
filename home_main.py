@@ -4,7 +4,8 @@ from src.ui.home_ui import HomeUI
 from src.controllers.home_controller import HomeController
 from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
-from src.setup_database import setup_database
+# from src.setup_database import setup_database  # Tambahkan ini
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
