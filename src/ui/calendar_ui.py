@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtGui import QFont
+from datetime import datetime
 from src.controllers.calendar_controller import CalendarController
 
 class CalendarUi(QWidget):
@@ -106,9 +107,22 @@ class CalendarUi(QWidget):
         # Add tasks to task list
         date = QDate(self.current_date.year(), self.current_date.month(), day).toString("yyyy-MM-dd")
         tasks = self.controller.get_tasks_for_date(date)
-        for task in tasks:
+        for task, isComplete, dueDate in tasks:
             task_label = QLabel(task)
-            task_label.setObjectName("taskLabel")
+
+            # Convert the date string to a datetime object
+            date_obj = datetime.strptime(dueDate, "%d-%m-%Y")
+
+            # Get the current date
+            current_date = datetime.now()
+
+            # Compare the dates
+            if isComplete:
+                task_label.setObjectName("taskLabelCompleted")
+            elif current_date > date_obj:
+                task_label.setObjectName("taskLabelLate")
+            else:
+                task_label.setObjectName("taskLabel")
             task_list_layout.addWidget(task_label)
 
         task_scroll.setWidget(task_list_widget)
