@@ -7,14 +7,14 @@ class ProgressModel:
     def get_completed_tasks_per_week(self, month, year):
         query = """
         SELECT 
-            ((CAST(strftime('%d', due_date) AS INTEGER) - 1) / 7) + 1 AS week,  -- Menghitung minggu dalam bulan
-            COUNT(*) AS task_count
-        FROM tasks
-        WHERE status = 'Completed'
-          AND strftime('%m', due_date) = ?   -- Filter berdasarkan bulan
-          AND strftime('%Y', due_date) = ?   -- Filter berdasarkan tahun
-        GROUP BY week
-        ORDER BY week;  -- Mengurutkan hasil berdasarkan minggu
+            ((CAST(strftime('%d', t.dueDate) AS INTEGER) - 1) / 7) + 1 AS week  -- Calculate week in the month
+        FROM Task t
+        LEFT JOIN tags tag ON t.taskId = tag.task_id
+        WHERE t.isComplete = 0  -- Filter only completed tasks
+            AND strftime('%m', t.dueDate) = ?  -- Filter by month
+            AND strftime('%Y', t.dueDate) = ?  -- Filter by year
+        GROUP BY week, t.taskId  -- Group by week and taskId to retain task-level details
+        ORDER BY week, t.dueDate;  -- Order by week and dueDate for better readability
         """
         cursor = self.conn.execute(query, (month, year))
         data = cursor.fetchall()

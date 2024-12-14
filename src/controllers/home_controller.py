@@ -49,7 +49,7 @@ class FilterDialog(QDialog):
         layout.addLayout(btn_layout)
     
     def load_filter_options(self):
-        conn = sqlite3.connect('tasks.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
     
         cursor.execute("SELECT DISTINCT category FROM Task")
@@ -79,7 +79,7 @@ class FilterDialog(QDialog):
 class HomeController:
     def __init__(self, view):
         self.view = view
-        self.db_path = 'tasks.db'
+        self.db_path = 'database.db'
         self.current_filters = {'category': None, 'tag': None, 'status': None}
         
         self.view.search_input.textChanged.connect(self.filter_tasks)

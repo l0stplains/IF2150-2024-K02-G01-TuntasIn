@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 def initialize_database():
-    conn = sqlite3.connect("tasks.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     # Membuat tabel jika belum ada

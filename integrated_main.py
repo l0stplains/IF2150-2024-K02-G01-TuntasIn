@@ -44,9 +44,9 @@ class MainWindow(QMainWindow):
         self.home_controller = HomeController(self.home_ui)
         self.folder_ui = FileFolderUI()
         self.add_file_ui = AddFileUI()
-        self.calendar_ui = CalendarUi("tasks.db")  # Replace with your actual calendar UI
+        self.calendar_ui = CalendarUi("database.db")  # Replace with your actual calendar UI
         self.progress_ui = ProgressWindow()  # Replace with your actual progress UI
-        self.progress_ui.set_progress_controller(ProgressController(self.progress_ui, "tasks.db"))
+        self.progress_ui.set_progress_controller(ProgressController(self.progress_ui, "database.db"))
         
         self.stacked_widget.addWidget(self.home_ui)
         self.stacked_widget.addWidget(self.folder_ui)
@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
 
         # Create controllers
         self.folder_controller = FolderController(self.folder_ui, self.add_file_ui)
-        self.add_file_controller = AddFileController(self.add_file_ui)
+        self.add_file_controller = AddFileController(self.add_file_ui, isInside=True)
         
         # Set window properties
         self.setMinimumSize(1280, 720)

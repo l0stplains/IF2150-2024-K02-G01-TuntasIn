@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 
 class CalendarController:
@@ -27,13 +28,18 @@ class CalendarController:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = """
-SELECT t.id, t.name, t.category, t.status, t.due_date, GROUP_CONCAT(tag.name) AS tags
-FROM tasks t
-LEFT JOIN tags tag ON t.id = tag.task_id
-WHERE t.due_date = ?
-GROUP BY t.id;
+        SELECT t.taskId, t.title, t.category, t.isComplete, t.dueDate, GROUP_CONCAT(tag.name)
+        FROM Task t
+        LEFT JOIN tags tag ON t.taskId = tag.task_id
+        WHERE t.dueDate LIKE ?
+        GROUP BY t.taskId
 """
-        cursor.execute(query, (date,))
+        # Parse the string into a datetime object
+        date_object = datetime.strptime(date, "%Y-%m-%d")
+
+        # Format the datetime object into the desired format
+        formatted_date = date_object.strftime("%d-%m-%Y")
+        cursor.execute(query, (formatted_date,))
         tasks = [row[1] for row in cursor.fetchall()]
         connection.close()
         return tasks
