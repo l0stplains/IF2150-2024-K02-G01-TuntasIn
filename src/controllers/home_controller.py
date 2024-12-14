@@ -83,7 +83,7 @@ class HomeController:
         self.current_filters = {'category': None, 'tag': None, 'status': None}
         
         self.view.search_input.textChanged.connect(self.filter_tasks)
-        self.view.add_btn.clicked.connect(self.add_task)
+        # self.view.add_btn.clicked.connect(self.add_task)
         self.view.filter_btn.clicked.connect(self.show_filter_dialog)
         
         self.load_tasks()
@@ -149,19 +149,8 @@ class HomeController:
         if dialog.exec_() == QDialog.Accepted:
             self.current_filters = dialog.get_filters()
             self.filter_tasks()
+                
         
-    def add_task(self):
-        # Collect task details from the UI
-        task_name = self.main_window.task_name_input.text()
-        due_date = self.main_window.due_date_input.date().toString("yyyy-MM-dd")
-
-        # Add task to the database
-        if task_name:
-            self.task_model.add_task(task_name, due_date)  # No need to specify status, will default to 'Pending'
-            QMessageBox.information(self.main_window, "Success", "Task added successfully!")
-            self.refresh_tasks()
-        else:
-            QMessageBox.warning(self.main_window, "Error", "Task name cannot be empty!")
 
     def refresh_tasks(self):
         tasks = self.task_model.get_all_tasks()

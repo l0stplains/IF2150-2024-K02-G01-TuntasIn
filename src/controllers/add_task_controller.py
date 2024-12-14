@@ -95,5 +95,9 @@ class AddTaskController:
             QMessageBox.critical(None, "Error", f"Failed to add task and tags: {e}")
 
     def home(self):
-        QMessageBox.information(None, "Cancel", "Operation cancelled.")
-        self.ui.close()
+        parent_widget = self.ui.parentWidget()  # Assuming this widget is inside a QStackedWidget
+        if parent_widget is not None and isinstance(parent_widget, QtWidgets.QStackedWidget):
+            parent_widget.setCurrentIndex(parent_widget.currentIndex() - 5)  # Move to the previous widget
+        else:
+            QMessageBox.information(None, "Error", "Parent widget is not a QStackedWidget.")
+

@@ -73,7 +73,7 @@ class HomeUI(QWidget):
         
     def setup_ui(self):
         self.setObjectName("homeWidget")
-        main_layout = QVBoxLayout(self)
+        self.main_layout = QVBoxLayout(self)
 
         search_layout = QHBoxLayout()
         self.search_input = QLineEdit()
@@ -99,8 +99,8 @@ class HomeUI(QWidget):
         
         scroll.setWidget(self.task_container)
         
-        main_layout.addLayout(search_layout)
-        main_layout.addWidget(scroll)
+        self.main_layout.addLayout(search_layout)
+        self.main_layout.addWidget(scroll)
         
     def add_task(self, task_id, name, category, tags, status, due_date):
         task_widget = TaskWidget(task_id, name, category, tags, status, due_date)
