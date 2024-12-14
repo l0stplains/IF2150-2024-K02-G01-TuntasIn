@@ -4,6 +4,8 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.ui.folder_ui import FileFolderUI
+from PyQt5.QtCore import QTranslator, QLibraryInfo
+from PyQt5.QtWidgets import QApplication
 
 class AddFileUI(QWidget):
     def __init__(self):
@@ -17,9 +19,10 @@ class AddFileUI(QWidget):
                            "    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,\n"
                            "                               stop:0 #F5F7FA, stop:1 #E8EAF6);\n"
                            "}")
-
+        
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(100, 0, 100, 200)  # Add margin around the main layout
+        main_layout.setContentsMargins(100, 50, 100, 200)  # Adjust the bottom margin
+
 
         # Title Section
         self.Title = QLabel("File Tuntasin", self)
@@ -36,7 +39,7 @@ class AddFileUI(QWidget):
 
         # Form Section
         form_layout = QVBoxLayout()
-        form_layout.setSpacing(15)  # Set spacing between form elements
+        form_layout.setContentsMargins(15,15,15,15)  # Set spacing between form elements
 
         # File Name Input
         self.labelNamaFile = QLabel("Nama Task", self)
@@ -49,6 +52,7 @@ class AddFileUI(QWidget):
         form_layout.addWidget(self.labelNamaFile)
 
         self.lineEditNama = QLineEdit(self)
+        self.lineEditNama.setMinimumHeight(70)
         self.lineEditNama.setPlaceholderText("Masukkan nama Task yang berkaitan dengan file, jika tidak ada kosongkan")
         self.lineEditNama.setStyleSheet("QLineEdit {\n"
                                         "    padding: 10px 20px;\n"
@@ -59,86 +63,6 @@ class AddFileUI(QWidget):
                                         "    color: #2C3E50;\n"
                                         "}")
         form_layout.addWidget(self.lineEditNama)
-
-        # # Task Tag Input
-        # self.labelTagTugas = QLabel("Tag Tugas", self)
-        # self.labelTagTugas.setStyleSheet("QLabel {\n"
-        #                                  "    font-weight: bold;\n"
-        #                                  "    font-size: 20px;\n"
-        #                                  "    font-family: 'Segoe UI', Arial;\n"
-        #                                  "    color: #7E57C2;\n"
-        #                                  "}")
-        # form_layout.addWidget(self.labelTagTugas)
-        
-        # # Input Tag
-        # tag_layout = QVBoxLayout()
-        # tag_input_layout = QHBoxLayout()
-        # self.lineEditTag1 = QLineEdit(self)
-        # self.lineEditTag1.setPlaceholderText("Masukkan tag tugas")
-        # self.lineEditTag1.setStyleSheet("QLineEdit {\n"
-        #                                "    padding: 10px 20px;\n"
-        #                                "    border: 2px solid #E8EAF6;\n"
-        #                                "    border-radius: 8px;\n"
-        #                                "    font-size: 14px;\n"
-        #                                "    background-color: white;\n"
-        #                                "    color: #2C3E50;\n"
-        #                                "}")
-        
-
-        # self.lineEditTag2 = QLineEdit(self)
-        # self.lineEditTag2.setPlaceholderText("Masukkan tag tugas")
-        # self.lineEditTag2.setStyleSheet("QLineEdit {\n"
-        #                                "    padding: 10px 20px;\n"
-        #                                "    border: 2px solid #E8EAF6;\n"
-        #                                "    border-radius: 8px;\n"
-        #                                "    font-size: 14px;\n"
-        #                                "    background-color: white;\n"
-        #                                "    color: #2C3E50;\n"
-        #                                "}")
-        
-        # self.lineEditTag3 = QLineEdit(self)
-        # self.lineEditTag3.setPlaceholderText("Masukkan tag tugas")
-        # self.lineEditTag3.setStyleSheet("QLineEdit {\n"
-        #                                "    padding: 10px 20px;\n"
-        #                                "    border: 2px solid #E8EAF6;\n"
-        #                                "    border-radius: 8px;\n"
-        #                                "    font-size: 14px;\n"
-        #                                "    background-color: white;\n"
-        #                                "    color: #2C3E50;\n"
-        #                                "}")
-
-        
-        # self.lineEditTag4 = QLineEdit(self)
-        # self.lineEditTag4.setPlaceholderText("Masukkan tag tugas")
-        # self.lineEditTag4.setStyleSheet("QLineEdit {\n"
-        #                                "    padding: 10px 20px;\n"
-        #                                "    border: 2px solid #E8EAF6;\n"
-        #                                "    border-radius: 8px;\n"
-        #                                "    font-size: 14px;\n"
-        #                                "    background-color: white;\n"
-        #                                "    color: #2C3E50;\n"
-        #                                "}")
-
-        
-        # self.lineEditTag5 = QLineEdit(self)
-        # self.lineEditTag5.setPlaceholderText("Masukkan tag tugas")
-        # self.lineEditTag5.setStyleSheet("QLineEdit {\n"
-        #                                "    padding: 10px 20px;\n"
-        #                                "    border: 2px solid #E8EAF6;\n"
-        #                                "    border-radius: 8px;\n"
-        #                                "    font-size: 14px;\n"
-        #                                "    background-color: white;\n"
-        #                                "    color: #2C3E50;\n"
-        #                                "}")
-
-        # tag_input_layout.addWidget(self.lineEditTag1)
-        # tag_input_layout.addWidget(self.lineEditTag2)
-        # tag_input_layout.addWidget(self.lineEditTag3)
-        # tag_input_layout.addWidget(self.lineEditTag4)
-        # tag_input_layout.addWidget(self.lineEditTag5)
-
-        # tag_layout.addLayout(tag_input_layout)
-        # form_layout.addLayout(tag_layout)
 
         # File Upload Button
         upload_button_layout = QHBoxLayout()
@@ -162,9 +86,9 @@ class AddFileUI(QWidget):
 
         # Bottom Buttons
         button_layout = QHBoxLayout()
-        button_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        button_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        self.pushButtonBatal = QPushButton("Batal", self)
+        self.pushButtonBatal = QPushButton("Kembali", self)
         self.pushButtonBatal.setStyleSheet("QPushButton {\n"
                                            "    background-color: #EF5350;\n"
                                            "    color: white;\n"
@@ -196,6 +120,8 @@ class AddFileUI(QWidget):
 
         button_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         main_layout.addLayout(button_layout)
+        
+        form_layout.addStretch(1)
 
     def backToPreviousWindow(self):
         # Close the current window and show the previous window (FolderUI)

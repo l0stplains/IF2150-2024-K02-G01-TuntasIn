@@ -1,7 +1,10 @@
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QMainWindow
 from src.models.folder import FileModel  # Import model FileModel
 import os
+from PyQt5.QtCore import QCoreApplication
+from src.components.navbar import NavBar
 
+Folder_Main = None
 class AddFileController:
     def __init__(self, ui):
         """
@@ -17,7 +20,6 @@ class AddFileController:
         """
         # self.ui.pushButtonTag.clicked.connect(self.add_tag)
         self.ui.pushButtonFile.clicked.connect(self.upload_file)
-        self.ui.pushButtonBatal.clicked.connect(self.cancel)
         self.ui.pushButtonTambah.clicked.connect(self.add_task_file)
 
     def upload_file(self):
@@ -33,13 +35,6 @@ class AddFileController:
         if file_name:
             QMessageBox.information(self.ui, "File Selected", f"File '{file_name}' selected!")
             self.ui.selected_file = file_name  # Store selected file path
-
-    def cancel(self):
-        """
-        Handle the 'Batal' button click.
-        """
-        QMessageBox.information(self.ui, "Cancel", "Operation cancelled.")
-        self.ui.close()
 
     def add_task_file(self):
         """
