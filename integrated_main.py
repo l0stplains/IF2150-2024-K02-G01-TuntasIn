@@ -12,6 +12,7 @@ from src.controllers.calendar_controller import CalendarController
 from src.controllers.progress_controller import ProgressController
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QStackedWidget
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 # from src.setup_database import setup_database  # Tambahkan ini
 
 class MainWindow(QMainWindow):
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     
     app = QApplication(sys.argv)
     
+    app.setWindowIcon(QIcon("img/tuntas-in-icon.svg"))
     # Load stylesheet
     try:
         with open('src/styles/main.qss', 'r') as f:
