@@ -45,7 +45,7 @@ class AddTaskController:
             return
 
         try:
-            DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'tasks.db')
+            DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'database.db')
 
             # Then in the add_task method:
             conn = sqlite3.connect(DB_PATH)
