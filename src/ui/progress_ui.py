@@ -6,8 +6,9 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QCursor, QGuiApplication
 from PyQt5.QtChart import (
     QChart, QChartView, QBarSet, QBarSeries, QPieSeries, QBarCategoryAxis, QValueAxis
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDate
 from datetime import datetime
+
 
 class ProgressWindow(QWidget):
     def __init__(self, progress_controller=None):
@@ -20,23 +21,23 @@ class ProgressWindow(QWidget):
         # Setup UI
         self.central_widget = QWidget()
         self.main_layout = QVBoxLayout(self.central_widget)
-        header_layout = QHBoxLayout()
 
         # Create a main layout if not already done
         layout = QVBoxLayout(self)
-        layout.addWidget(self.central_widget)  # Add the central widget to the main layout
+        # Add the central widget to the main layout
+        layout.addWidget(self.central_widget)
 
-        # "Tampilan" and "Periode" buttons
+        # "Chart View" and "Period" buttons
         button_layout = QHBoxLayout()
 
-        # "Tampilan" buttons
-        self.view_button = QPushButton("Tampilan")
+        # "Chart View" buttons
+        self.view_button = QPushButton("Chart View")
         self.view_button.setObjectName("viewButton")
         self.view_button.setFixedSize(120, 40)
         self.view_button.setCursor(QCursor(Qt.PointingHandCursor))
 
-        # "Periode" buttons
-        self.period_button = QPushButton("Periode")
+        # "Period" buttons
+        self.period_button = QPushButton("Period")
         self.period_button.setObjectName("periodButton")
         self.period_button.setFixedSize(120, 40)
         self.period_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -56,14 +57,15 @@ class ProgressWindow(QWidget):
         self.chart_view.setRenderHint(QPainter.Antialiasing)
         self.main_layout.addWidget(self.chart_view)
 
-        # Default initial values
-        self.selected_month = 1  # Januari
-        self.selected_year = datetime.now().year
-        self.view_type = "Grafik Batang"
-
         # Button connections
         self.view_button.clicked.connect(self.change_view_type)
-        self.period_button.clicked.connect(self.select_period)    
+        self.period_button.clicked.connect(self.select_period)
+
+        # Default initial values
+        self.selected_month = QDate.currentDate().month()  # Current month
+        self.selected_year = datetime.now().year
+        self.view_type = "Bar Chart"
+
 
     def set_progress_controller(self, controller):
         """Set the ProgressController to link the ProgressWindow with its controller."""
@@ -72,7 +74,7 @@ class ProgressWindow(QWidget):
     def change_view_type(self):
         """Dialog untuk memilih jenis tampilan (Grafik Batang atau Lingkaran)."""
         dialog = QDialog(self)
-        dialog.setWindowTitle("Pilih Tampilan")
+        dialog.setWindowTitle("Chart View")
 
         dialog.setMinimumWidth(300)
         dialog.setMinimumHeight(150)
@@ -80,17 +82,18 @@ class ProgressWindow(QWidget):
         layout = QVBoxLayout()
 
         view_combo = QComboBox()
-        view_combo.addItems(["Grafik Batang", "Grafik Lingkaran"])
+        view_combo.addItems(["Bar Chart", "Pie Chart"])
         view_combo.setCurrentText(self.view_type)
 
-        view_combo.setObjectName("viewComboBox") 
+        view_combo.setObjectName("viewComboBox")
 
         view_combo.setFixedSize(250, 40)
 
         layout.addWidget(view_combo)
 
         # "OK" and "Cancel" buttons
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
         # Set ObjectName untuk tombol
         buttons.button(QDialogButtonBox.Ok).setObjectName("okButton")
@@ -112,7 +115,7 @@ class ProgressWindow(QWidget):
     def select_period(self):
         """Dialog untuk memilih periode (bulan dan tahun)."""
         dialog = QDialog(self)
-        dialog.setWindowTitle("Pilih Periode")
+        dialog.setWindowTitle("Choose Period")
 
         dialog.setMinimumWidth(300)
         dialog.setMinimumHeight(200)
@@ -121,34 +124,36 @@ class ProgressWindow(QWidget):
 
         # Layout for month
         month_layout = QHBoxLayout()
-        month_label = QLabel("Bulan:")  
-        month_label.setObjectName("Bulan")
-        month_layout.addWidget(month_label) 
+        month_label = QLabel("Month:")
+        month_label.setObjectName("Month")
+        month_layout.addWidget(month_label)
         month_combo = QComboBox()
-        month_combo.setObjectName("monthComboBox")  
+        month_combo.setObjectName("monthComboBox")
         month_combo.addItems([
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
         ])
         month_combo.setCurrentIndex(self.selected_month - 1)
-        month_layout.addWidget(month_combo)  
-        layout.addLayout(month_layout) 
+        month_layout.addWidget(month_combo)
+        layout.addLayout(month_layout)
 
         # Layout for year
         year_layout = QHBoxLayout()
-        year_label = QLabel("Tahun:")  
-        year_label.setObjectName("Tahun") 
+        year_label = QLabel("Year:")
+        year_label.setObjectName("Year")
         year_layout.addWidget(year_label)
         year_combo = QComboBox()
-        year_combo.setObjectName("yearComboBox") 
+        year_combo.setObjectName("yearComboBox")
         current_year = datetime.now().year
-        year_combo.addItems([str(year) for year in range(2000, current_year + 1)])
+        year_combo.addItems([str(year)
+                            for year in range(2000, current_year + 1)])
         year_combo.setCurrentText(str(self.selected_year))
-        year_layout.addWidget(year_combo) 
-        layout.addLayout(year_layout)  
+        year_layout.addWidget(year_combo)
+        layout.addLayout(year_layout)
 
         # "OK" and "Cancel" buttons
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
 
         # Objectname for "OK" and "Cancel" buttons
         buttons.button(QDialogButtonBox.Ok).setObjectName("okButton")
@@ -170,7 +175,7 @@ class ProgressWindow(QWidget):
 
     def apply_filters(self):
         """Terapkan filter berdasarkan bulan, tahun, dan jenis tampilan."""
-        if self.chart.series():  
+        if self.chart.series():
             self.clear_previous_display()
         self.progress_controller.load_progress(
             month=self.selected_month,
@@ -193,8 +198,8 @@ class ProgressWindow(QWidget):
             self.chart.removeAxis(axis_y)
 
     def update_chart(self, progress_data, view_type, title):
-        self.chart.removeAllSeries() 
-        self.chart.setTitle(title)  
+        self.chart.removeAllSeries()
+        self.chart.setTitle(title)
 
         title_font = QFont("Segoe UI", 16, QFont.Bold)
         self.chart.setTitleBrush(QColor("#00008B"))
@@ -209,9 +214,9 @@ class ProgressWindow(QWidget):
         if axis_y is not None:
             self.chart.removeAxis(axis_y)
 
-        if view_type == "Grafik Batang":
+        if view_type == "Bar Chart":
             # Make a bar chart
-            bar_set = QBarSet("Tugas Selesai")
+            bar_set = QBarSet("Task Completed")
             bar_set.append(list(progress_data.values()))
             series = QBarSeries()
             series.append(bar_set)
@@ -222,7 +227,7 @@ class ProgressWindow(QWidget):
             axis_x = QBarCategoryAxis()
             axis_x.append(categories)
             self.chart.setAxisX(axis_x, series)
-            axis_x.setTitleText("Minggu")
+            axis_x.setTitleText("Week")
 
             # Font untuk label sumbu X
             axis_x_font = QFont("Segoe UI", 10)
@@ -234,11 +239,12 @@ class ProgressWindow(QWidget):
             axis_x.setTitleFont(axis_x_title_font)
             axis_x.setTitleBrush(QColor("#3A539B"))
 
-            # Sumbu Y (Jumlah Tugas) 
+            # Sumbu Y (Jumlah Tugas)
             axis_y = QValueAxis()
             axis_y.setRange(0, max(progress_data.values()) + 1)
-            axis_y.setTickCount(max(progress_data.values()) + 2)  # Menggunakan bilangan bulat untuk sumbu Y
-            axis_y.setTitleText("Banyak Tugas Selesai")
+            # Menggunakan bilangan bulat untuk sumbu Y
+            axis_y.setTickCount(max(progress_data.values()) + 2)
+            axis_y.setTitleText("Task Count")
             axis_y.setLabelFormat("%d")
 
             # Font untuk label sumbu Y
@@ -253,16 +259,17 @@ class ProgressWindow(QWidget):
 
             self.chart.setAxisY(axis_y, series)
 
-        elif view_type == "Grafik Lingkaran":
+        elif view_type == "Pie Chart":
             # Create a pie chart
             pie_series = QPieSeries()
-            total_tasks = sum(progress_data.values())  
+            total_tasks = sum(progress_data.values())
             for week, count in progress_data.items():
-                if count > 0: 
+                if count > 0:
                     percentage = (count / total_tasks) * 100
-                    slice_item = pie_series.append(f"{week} ({percentage:.2f}%)", count) 
-                    slice_item.setLabelVisible(True)  
-                    
+                    slice_item = pie_series.append(
+                        f"{week} ({percentage:.2f}%)", count)
+                    slice_item.setLabelVisible(True)
+
                     pie_label_font = QFont("Segoe UI", 10)
                     pie_label_font.setBold(True)
                     slice_item.setLabelFont(pie_label_font)
