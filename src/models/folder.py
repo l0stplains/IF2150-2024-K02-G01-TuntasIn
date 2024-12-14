@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QMessageBox
 
 class FileModel:
     def __init__(self, db_name="database.db"):
-    def __init__(self, db_name="database.db"):
         self.conn = sqlite3.connect(db_name)
         self.create_table()
 
@@ -40,7 +39,6 @@ class FileModel:
         self.conn.commit()
 
     def save_file_from_path(self, file_path, task_id):
-    def save_file_from_path(self, file_path, task_id):
         """
         Save a file into the database from a file path.
         """
@@ -49,7 +47,6 @@ class FileModel:
         self.add_file(os.path.basename(file_path), file_path, file_data, task_id)
         self.add_file(os.path.basename(file_path), file_path, file_data, task_id)
 
-    def populate_from_folder(self, folder_path, task_id):
     def populate_from_folder(self, folder_path, task_id):
         """
         Populate the database with files from a given folder.

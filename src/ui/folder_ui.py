@@ -130,7 +130,6 @@ class FileFolderUI(QMainWindow):
 
 class Card(QWidget):
     def __init__(self, attachment_id, name, task, icon_path, file_path, parent=None):
-    def __init__(self, attachment_id, name, task, icon_path, file_path, parent=None):
         super().__init__(parent)
         self.attachment_id = attachment_id  # Store the unique attachment ID
         self.file_path = file_path

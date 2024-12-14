@@ -41,8 +41,6 @@ class AddFileController:
             "", 
             "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
         )
-            "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
-        )
         if file_name:
             QMessageBox.information(None, "File Selected", f"File '{file_name}' selected!", QMessageBox.Ok)
             self.ui.selected_file = file_name  # Store selected file path
