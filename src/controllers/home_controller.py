@@ -1,9 +1,6 @@
 import sqlite3
 from datetime import datetime
 from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
-import sqlite3
-from datetime import datetime
-from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
 from src.controllers.edit_view_controller import EditViewController
 from src.controllers.task_view_controller import TaskViewController
 from src.ui.task_view_ui import TaskViewUI
@@ -90,10 +87,33 @@ class HomeController:
         self.current_filters = {'category': None, 'tag': None, 'status': None}
         
         self.view.search_input.textChanged.connect(self.filter_tasks)
-        # self.view.add_btn.clicked.connect(self.add_task)
         self.view.filter_btn.clicked.connect(self.show_filter_dialog)
         
         self.load_tasks()
+
+    def toggle_task_completion(self, task_id, is_complete):
+        """Handle toggling task completion status"""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            
+            cursor.execute(
+                "UPDATE Task SET isComplete = ? WHERE taskId = ?",
+                (1 if is_complete else 0, task_id)
+            )
+            
+            conn.commit()
+            conn.close()
+            
+            # Reload tasks to reflect changes
+            self.load_tasks(self.view.search_input.text())
+            
+        except sqlite3.Error as e:
+            QMessageBox.critical(
+                self.view,
+                "Error",
+                f"Failed to update task completion status: {str(e)}"
+            )
 
     def filter_tasks(self):
         search_text = self.view.search_input.text()
@@ -148,6 +168,7 @@ class HomeController:
             task_widget.clicked.connect(self.show_task_details)
             task_widget.edit_clicked.connect(self.edit_task)
             task_widget.delete_clicked.connect(self.delete_task)
+            task_widget.complete_clicked.connect(self.toggle_task_completion)
             
         conn.close()
         
@@ -156,27 +177,20 @@ class HomeController:
         if dialog.exec_() == QDialog.Accepted:
             self.current_filters = dialog.get_filters()
             self.filter_tasks()
-                
-        
 
-    def refresh_tasks(self):
-        tasks = self.task_model.get_all_tasks()
-        self.main_window.update_task_list(tasks)
-        
     def edit_task(self, task_id):
         task_dialog = QDialog()
-        
         task_view_ui = EditViewUI(task_dialog)
-        
         task_controller = EditViewController(task_view_ui, task_id)
-        
         task_dialog.exec_()
+        self.load_tasks(self.view.search_input.text())
         
     def show_task_details(self, task_id):
         dialog = QDialog()
         task_view_ui = TaskViewUI(dialog)
         task_controller = TaskViewController(task_view_ui, task_id)
         dialog.exec_()
+        self.load_tasks(self.view.search_input.text())
         
     def delete_task(self, task_id):
         reply = QMessageBox.question(
