@@ -160,10 +160,6 @@ class EditViewUI(object):
         self.nameWarning.setStyleSheet("font: 9pt \"MS Shell Dlg 2\";color: rgb(255, 0, 0);")
         self.nameWarning.setText("")
         self.nameWarning.setObjectName("nameWarning")
-        self.date = QtWidgets.QDateEdit(self.widget)
-        self.date.setGeometry(QtCore.QRect(100, 470, 151, 31))
-        self.date.setCalendarPopup(True)
-        self.date.setObjectName("date")
         self.category = QtWidgets.QComboBox(self.widget)
         self.category.setGeometry(QtCore.QRect(100, 570, 151, 31))
         self.category.setStyleSheet("")
@@ -186,9 +182,37 @@ class EditViewUI(object):
         self.tag5.setGeometry(QtCore.QRect(980, 670, 171, 31))
         self.tag5.setPlaceholderText("")
         self.tag5.setObjectName("tag5")
+        self.date = QtWidgets.QDateTimeEdit(self.widget)
+        self.date.setGeometry(QtCore.QRect(100, 470, 151, 31))
+        self.date.setCalendarPopup(True)
+        self.date.setObjectName("date")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.label_2.setText(_translate("Dialog", "Nama"))
+        self.label.setText(_translate("Dialog", "Form TuntasIn"))
+        self.description.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.description.setPlaceholderText(_translate("Dialog", "Deskripsikan tugas anda..."))
+        self.label_3.setText(_translate("Dialog", "Deskripsi"))
+        self.label_6.setText(_translate("Dialog", "Tag"))
+        self.pushButton.setText(_translate("Dialog", "Lampirkan"))
+        self.label_7.setText(_translate("Dialog", "File"))
+        self.cancel.setText(_translate("Dialog", "Batal"))
+        self.add.setText(_translate("Dialog", "Tambah"))
+        self.pushButton_4.setText(_translate("Dialog", "+"))
+        self.name.setPlaceholderText(_translate("Dialog", "Masukkan nama tugas..."))
+        self.label_8.setText(_translate("Dialog", "Kategori"))
+        self.label_9.setText(_translate("Dialog", "Tanggal Tenggat"))
+        self.category.setItemText(0, _translate("Dialog", "Tugas"))
+        self.category.setItemText(1, _translate("Dialog", "Meet"))
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
