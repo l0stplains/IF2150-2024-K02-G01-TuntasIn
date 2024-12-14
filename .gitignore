@@ -39,7 +39,6 @@ coverage.xml
 *.pyc
 *.pyo
 *.log
-*.db
 
 # IDE / Editor files
 .idea/
@@ -49,7 +48,6 @@ coverage.xml
 
 # System files
 .DS_Store
-Thumbs.db
 
 # Backup files
 *.bak
@@ -58,7 +56,6 @@ Thumbs.db
 
 # SQLite database files
 *.sqlite3
-*.db
 *.db-journal
 
 # Log and runtime files
