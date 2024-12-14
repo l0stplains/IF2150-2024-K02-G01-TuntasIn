@@ -8,15 +8,6 @@ class FileModel:
         self.create_table()
 
     def create_table(self):
-        # Ensure the Task table exists first, if needed
-        query_task = """
-        CREATE TABLE IF NOT EXISTS Task (
-            taskId INTEGER PRIMARY KEY AUTOINCREMENT,
-            taskName TEXT
-        );
-        """
-        self.conn.execute(query_task)
-        self.conn.commit()
 
         # Create the Attachment table with the correct syntax
         query_attachment = """

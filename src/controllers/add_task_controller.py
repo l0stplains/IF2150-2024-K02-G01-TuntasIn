@@ -1,62 +1,99 @@
 import sys
+import os
+
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate
 import sqlite3
+from .add_file_controller import AddFileController
 
-class AddTask(QDialog):
-    def __init__(self):
-        super(AddTask, self).__init__()
-        loadUi("src/ui/add_task_ui.ui", self)
-        self.add.clicked.connect(self.addtask)
-        self.cancel.clicked.connect(self.home)
-        self.date.setDate(QDate.currentDate())
-        
 
-    def addtask(self):
-        name = self.name.text()
-        description = self.description.toPlainText()
-        date = self.date.date().toString("dd-MM-yyyy") 
-        category = self.category.currentText()
-        tag = self.tag.text()
+from PyQt5.QtWidgets import QMessageBox
 
-        if (len(name) == 0 or len(date) == 0):
-            if len(name) == 0:
-                self.nameWarning.setText("Name cannot be blank!")
-        else:
-            try:
-                conn = sqlite3.connect("tasks.db")
-                cur = conn.cursor()
 
-                query = """
-                INSERT INTO Task (title, description, dueDate, category, tag)
-                VALUES (?, ?, ?, ?, ?)
-                """
-                cur.execute(query, (name, description, date, category, tag))
-                conn.commit()
-                conn.close()
+class AddTaskController:
+    def __init__(self, ui):
+        self.ui = ui
+        self.add_file_controller = AddFileController(ui, False)  # Initialize file controller
+        self.setup_connections()
 
-                print("Task added successfully!")
-                self.nameWarning.setText("")
-                self.name.setText("")
-                self.description.setText("")
-                self.tag.setText("")
-            except sqlite3.Error as e:
-                print("Error while inserting task:", e)
+    def setup_connections(self):
+        print("Connecting upload_file method...")  # Debugging
+        self.ui.pushButton_4.clicked.connect(self.add_file_controller.upload_file)
+        self.ui.add.clicked.connect(self.add_task)
+        self.ui.cancel.clicked.connect(self.home)
+        self.ui.date.setDate(QDate.currentDate())
+
+
+    def add_task(self):
+        name = self.ui.name.text()
+        description = self.ui.description.toPlainText()
+        date = self.ui.date.date().toString("dd-MM-yyyy")
+        category = self.ui.category.currentText()
+
+        tags = [
+            self.ui.tag1.text().strip(),
+            self.ui.tag2.text().strip(),
+            self.ui.tag3.text().strip(),
+            self.ui.tag4.text().strip(),
+            self.ui.tag5.text().strip(),
+        ]
+
+        if len(name) == 0:  # Validate required fields
+            self.ui.nameWarning.setText("Name cannot be blank!")
+            return
+
+        try:
+            DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'database.db')
+
+            # Then in the add_task method:
+            conn = sqlite3.connect(DB_PATH)
+            cur = conn.cursor()
+
+            # Insert task into Task table
+            query1 = """
+            INSERT INTO Task (title, description, dueDate, category)
+            VALUES (?, ?, ?, ?)
+            """
+            cur.execute(query1, (name, description, date, category))
+
+            # Get the taskId of the newly inserted task
+            task_id = cur.lastrowid
+
+            # Insert tags into Tag table
+            query2 = """
+            INSERT INTO tags (task_id, name)
+            VALUES (?, ?)
+            """
+            for tag in tags:
+                if tag:  # Only insert non-empty tags
+                    cur.execute(query2, (task_id, tag))
+
+            # Commit the transaction
+            conn.commit()
+            conn.close()
+
+            # Clear the form fields after successful insertion
+            print("Task and tags added successfully!")
+            self.ui.nameWarning.setText("")
+            self.ui.name.setText("")
+            self.ui.description.setText("")
+            self.ui.tag1.setText("")
+            self.ui.tag2.setText("")
+            self.ui.tag3.setText("")
+            self.ui.tag4.setText("")
+            self.ui.tag5.setText("")
+            
+            self.add_file_controller.add_task_file(task_id, False)
+            # Show success message box (using self.ui as the parent)
+            QMessageBox.information(None, "Success", "Task and tags added successfully!")
+
+        except sqlite3.Error as e:
+            print("Error while inserting task or tags:", e)
+            # Show error message box
+            QMessageBox.critical(None, "Error", f"Failed to add task and tags: {e}")
+
     def home(self):
-        pass
-app = QApplication(sys.argv)
-addtask = AddTask()
-widget = QStackedWidget()
-widget.addWidget(addtask)
-
-widget.setFixedHeight(1024)
-widget.setFixedWidth(1280)
-widget.show()
-
-try:
-    sys.exit(app.exec())
-except Exception as e:
-    print("Exiting:", e)
-
+        QMessageBox.information(None, "Cancel", "Operation cancelled.")
+        self.ui.close()

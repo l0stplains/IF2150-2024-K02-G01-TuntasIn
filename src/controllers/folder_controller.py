@@ -74,4 +74,3 @@ class FolderController:
                 QMessageBox.warning(self.folder_ui, "Error", f"Failed to open file: {str(e)}")
         else:
             QMessageBox.warning(self.folder_ui, "Error", f"File does not exist: {file_path}")
-
