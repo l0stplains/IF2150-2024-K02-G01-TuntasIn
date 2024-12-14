@@ -1,6 +1,5 @@
 import sys
 import os
-
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
