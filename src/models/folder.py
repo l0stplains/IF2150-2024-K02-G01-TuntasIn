@@ -136,7 +136,22 @@ class FileModel:
         except Exception as e:
             QMessageBox.critical(self.folder_ui, "Error", f"Could not open file: {e}")
     
-    
+    def delete_file(self, attachment_id):
+        try:
+            query = "SELECT filePath FROM Attachment WHERE attachmentId = ?"
+            cursor = self.conn.execute(query, (attachment_id,))
+            result = cursor.fetchone()
+
+            if result:
+                delete_query = "DELETE FROM Attachment WHERE attachmentId = ?"
+                self.conn.execute(delete_query, (attachment_id,))
+                self.conn.commit()
+                
+            else:
+                print(f"No file found with attachment ID: {attachment_id}")
+
+        except Exception as e:
+            print(f"Error deleting file: {str(e)}")
 
     def close_connection(self):
         self.conn.close()

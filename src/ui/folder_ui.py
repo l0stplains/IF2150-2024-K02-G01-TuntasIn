@@ -4,7 +4,8 @@ from PyQt5.QtGui import QPixmap, QFontMetrics
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
 import os
-
+from src.models.folder import FileModel
+from PyQt5.QtWidgets import QMessageBox
 
 
 class FileFolderUI(QMainWindow):
@@ -12,6 +13,7 @@ class FileFolderUI(QMainWindow):
         super().__init__()
         self.setWindowTitle("File and Folder Explorer")
         self.setGeometry(100, 100, 800, 600)
+        self.file_model = FileModel("database.db")
 
         # Central widget
         central_widget = QWidget(self)
@@ -75,7 +77,7 @@ class FileFolderUI(QMainWindow):
         # Add scroll area to main layout
         main_layout.addWidget(scroll_area)
         
-    def add_card(self, file_path, name=None, task=None):
+    def add_card(self, id, file_path, name=None, task=None):
         # Check if name and tag are provided, otherwise use defaults
         name = name or "Unnamed File"
         task = task or "No Tag"
@@ -91,21 +93,36 @@ class FileFolderUI(QMainWindow):
             icon_path = "img/txt.png"
 
         # Create the card widget
-        card = Card(name, task, icon_path, file_path, self)
+        card = Card(id, name, task, icon_path, file_path, self)
         row, col = len(self.cards) // 3, len(self.cards) % 3  # 3 cards per row
 
         # Add the card to the grid layout
         self.grid_layout.addWidget(card, row, col)
         self.cards.append(card)
+        
+    def delete_card(self, attachment_id):
+        """
+        Delete the card and remove the associated file record from the database.
+        """
+        
+        card_to_delete = next((card for card in self.cards if card.attachment_id == attachment_id), None)
+        if card_to_delete:
+            self.file_model.delete_file(attachment_id)  # Remove the file from the database
+            self.cards.remove(card_to_delete)  # Remove the card from the list
+            card_to_delete.deleteLater()  # Remove card widget from the UI
+        else:
+            QMessageBox.warning(self, "Error", "Card not found!")
 
 
 
 class Card(QWidget):
-    def __init__(self, name, task, icon_path, file_path, parent=None):
+    def __init__(self, attachment_id, name, task, icon_path, file_path, parent=None):
         super().__init__(parent)
-        self.file_path = file_path  # Store the file path for later use
-        # self.setFixedSize(200, 250)  # Set the card's size
+        self.attachment_id = attachment_id  # Store the unique attachment ID
+        self.file_path = file_path
+        self.parent_ui = parent  # Store the parent UI (FileFolderUI) instance
         self.setMaximumWidth(400)
+        self.setMaximumHeight(400)
         self.setStyleSheet("""
             QWidget {   
                 border: 1px solid #ccc;
@@ -116,13 +133,11 @@ class Card(QWidget):
 
         # Vertical layout for the card
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)  # Add padding inside the card
+        layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
-        # layout.setAlignment(Qt.AlignTop)  # Align content to the top
 
         # Icon/Image
         icon_label = QLabel(self)
-        # icon_label.setFixedSize(120, 120)  # Set fixed size for the icon
         icon_label.setAlignment(Qt.AlignCenter)
         pixmap = QPixmap(icon_path).scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         icon_label.setPixmap(pixmap)
@@ -131,19 +146,19 @@ class Card(QWidget):
         title_label = QLabel(name, self)
         title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #333;")
         title_label.setAlignment(Qt.AlignCenter)
-        title_label.setWordWrap(True)  # Enable text wrapping for long titles
-        title_label.setFixedHeight(30)  # Limit the height of the title
+        title_label.setWordWrap(True)
+        title_label.setFixedHeight(30)
 
         # Description
         task_label = QLabel(task, self)
         task_label.setStyleSheet("font-size: 12px; color: #666;")
         task_label.setAlignment(Qt.AlignCenter)
-        task_label.setWordWrap(True)  # Enable text wrapping for long descriptions
+        task_label.setWordWrap(True)
         task_label.setFixedHeight(20)
-        
+
         # Truncate title if it's too long
         font_metrics = QFontMetrics(title_label.font())
-        max_width = title_label.width() - 20  # Subtracting some padding for appearance
+        max_width = title_label.width() - 20
         title_width = font_metrics.width(name)
         task_width = font_metrics.width(task)
 
@@ -169,17 +184,50 @@ class Card(QWidget):
         """)
         self.open_file_button.clicked.connect(self.open_file_from_card)
 
+        # Delete button (X button)
+        self.delete_button = QPushButton("Delete", self)
+        self.delete_button.setStyleSheet("""
+            QPushButton {
+                padding: 5px 10px;
+                background-color: red;
+                color: white;
+                border: none;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: darkred;
+            }
+        """)
+        self.delete_button.clicked.connect(self.delete_card)
+
         # Add widgets to layout
         layout.addWidget(icon_label)
         layout.addWidget(title_label)
         layout.addWidget(task_label)
         layout.addWidget(self.open_file_button)
-        # layout.addStretch()  # Push everything to the top
-        
+        layout.addWidget(self.delete_button)
+
+    def delete_card(self):
+        # Directly call the delete_card method of FileFolderUI instance (parent_ui)
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("Confirm Delete")
+        msg_box.setText("Are you sure you want to delete this file?")
+        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+        # Manually set button texts
+        yes_button = msg_box.button(QMessageBox.Yes)
+        yes_button.setText("Yes")
+        no_button = msg_box.button(QMessageBox.No)
+        no_button.setText("No")
+
+        # Tampilkan QMessageBox
+        reply = msg_box.exec_()
+        if reply == QMessageBox.Yes:
+            if self.parent_ui:
+                self.parent_ui.delete_card(self.attachment_id)
+
     def open_file_from_card(self):
-        """
-        Open the file associated with the current card.
-        """
+        """Open the file associated with the current card."""
         if not self.file_path:
             QMessageBox.warning(self, "Error", "File path not found!")
             return
