@@ -10,10 +10,13 @@ class AddTaskUI(object):
     def setupUi(self, AddTask):
         AddTask.setObjectName("AddTask")
         AddTask.resize(1280, 1000)
+        AddTask.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         AddTask.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         AddTask.setStyleSheet("")
+        self.verticalLayout = QtWidgets.QVBoxLayout(AddTask)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.scrollArea = QtWidgets.QScrollArea(AddTask)
-        self.scrollArea.setGeometry(QtCore.QRect(0, 0, 1280, 1000))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
@@ -27,6 +30,8 @@ class AddTaskUI(object):
         self.widget.setAutoFillBackground(False)
         self.widget.setStyleSheet("QWidget#widget{\n"
 "background-color: rgb(255, 255,255);\n"
+"font-family: \'Segoe UI\', Arial;\n"
+"\n"
 "}\n"
 "\n"
 "QLineEdit, QTextEdit{\n"
@@ -37,9 +42,9 @@ class AddTaskUI(object):
 "\n"
 "QLabel{\n"
 "font-size: 20px;\n"
-"font-weight: 700;\n"
+"font-weight: bold ;\n"
 "font-family: \'Segoe UI\', Arial;\n"
-"\n"
+"color: #7E57C2 ;\n"
 "}\n"
 "\n"
 "QDateEdit{\n"
@@ -55,18 +60,22 @@ class AddTaskUI(object):
         self.label_2.setStyleSheet("")
         self.label_2.setObjectName("label_2")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setGeometry(QtCore.QRect(410, 20, 271, 61))
+        self.label.setGeometry(QtCore.QRect(440, 10, 341, 61))
         font = QtGui.QFont()
-        font.setFamily("MS Shell Dlg 2")
-        font.setPointSize(24)
-        font.setBold(False)
+        font.setFamily("Segoe UI")
+        font.setPointSize(-1)
+        font.setBold(True)
         font.setItalic(False)
-        font.setWeight(9)
+        font.setWeight(75)
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.label.setFont(font)
         self.label.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label.setStyleSheet("font: 75  24pt \"MS Shell Dlg 2\";\n"
+        self.label.setStyleSheet("   font-size: 40px;\n"
+"   font-weight: bold;\n"
+"   color: #7E57C2;\n"
+"   padding: 12px 20px;\n"
+"   border: none;\n"
 "")
         self.label.setObjectName("label")
         self.description = QtWidgets.QTextEdit(self.widget)
@@ -85,11 +94,15 @@ class AddTaskUI(object):
         self.pushButton = QtWidgets.QPushButton(self.widget)
         self.pushButton.setGeometry(QtCore.QRect(100, 800, 201, 41))
         self.pushButton.setStyleSheet("QPushButton{\n"
-"background-color: rgb(0, 0, 255);\n"
+"background-color: #7E57C2 ;\n"
 "border-radius: 10px;\n"
-"color:black;\n"
+"color:white;\n"
 "font-weight: 700;\n"
 "font-size: 16px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"background-color: rgb(163, 114, 255);\n"
+"\n"
 "}")
         self.pushButton.setObjectName("pushButton")
         self.label_7 = QtWidgets.QLabel(self.widget)
@@ -98,32 +111,46 @@ class AddTaskUI(object):
         self.label_7.setObjectName("label_7")
         self.cancel = QtWidgets.QPushButton(self.widget)
         self.cancel.setGeometry(QtCore.QRect(350, 880, 201, 41))
-        self.cancel.setStyleSheet("\n"
-"background-color: rgb(255, 0, 0);\n"
+        self.cancel.setStyleSheet("QPushButton{\n"
+"background-color: #EF5350;\n"
 "border-radius: 10px;\n"
-"color:black;\n"
+"color:white;\n"
 "font-weight: 700;\n"
 "font-size: 16px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"background-color: rgb(179, 62, 60);\n"
+"}\n"
 "")
         self.cancel.setObjectName("cancel")
         self.add = QtWidgets.QPushButton(self.widget)
         self.add.setGeometry(QtCore.QRect(590, 880, 201, 41))
         self.add.setStyleSheet("QPushButton{\n"
-"background-color: rgb(0, 255, 0);\n"
+"background-color: #66BB6A;\n"
 "border-radius: 10px;\n"
-"color:black;\n"
+"color:white;\n"
 "font-weight: 700;\n"
 "font-size: 16px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"background-color: rgb(79, 145, 81);\n"
+"\n"
 "}")
         self.add.setObjectName("add")
         self.pushButton_4 = QtWidgets.QPushButton(self.widget)
         self.pushButton_4.setGeometry(QtCore.QRect(330, 800, 51, 41))
-        self.pushButton_4.setStyleSheet("QPushButton{\n"
-"background-color: rgb(0, 0, 255);\n"
+        self.pushButton_4.setStyleSheet("\n"
+"QPushButton{\n"
+"background-color: #7E57C2 ;\n"
 "border-radius: 20px;\n"
-"color:black;\n"
+"color:white;\n"
 "font-weight: 700;\n"
 "font-size: 16px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"background-color: rgb(163, 114, 255);\n"
+"\n"
 "}")
         self.pushButton_4.setObjectName("pushButton_4")
         self.name = QtWidgets.QLineEdit(self.widget)
@@ -131,6 +158,7 @@ class AddTaskUI(object):
         self.name.setObjectName("name")
         self.tag1 = QtWidgets.QLineEdit(self.widget)
         self.tag1.setGeometry(QtCore.QRect(100, 670, 141, 31))
+        self.tag1.setPlaceholderText("")
         self.tag1.setObjectName("tag1")
         self.label_8 = QtWidgets.QLabel(self.widget)
         self.label_8.setGeometry(QtCore.QRect(100, 520, 91, 41))
@@ -168,6 +196,7 @@ class AddTaskUI(object):
         self.tag5.setGeometry(QtCore.QRect(820, 670, 141, 31))
         self.tag5.setObjectName("tag5")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(self.scrollArea)
 
         self.retranslateUi(AddTask)
         QtCore.QMetaObject.connectSlotsByName(AddTask)
@@ -182,6 +211,7 @@ class AddTaskUI(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.description.setPlaceholderText(_translate("AddTask", "Deskripsikan tugas anda..."))
         self.label_3.setText(_translate("AddTask", "Deskripsi"))
         self.label_6.setText(_translate("AddTask", "Tag"))
         self.pushButton.setText(_translate("AddTask", "Lampirkan"))
@@ -189,10 +219,12 @@ class AddTaskUI(object):
         self.cancel.setText(_translate("AddTask", "Batal"))
         self.add.setText(_translate("AddTask", "Tambah"))
         self.pushButton_4.setText(_translate("AddTask", "+"))
+        self.name.setPlaceholderText(_translate("AddTask", "Masukkan nama tugas..."))
         self.label_8.setText(_translate("AddTask", "Kategori"))
         self.label_9.setText(_translate("AddTask", "Tanggal Tenggat"))
         self.category.setItemText(0, _translate("AddTask", "Tugas"))
         self.category.setItemText(1, _translate("AddTask", "Meet"))
+
 
 
 if __name__ == "__main__":
