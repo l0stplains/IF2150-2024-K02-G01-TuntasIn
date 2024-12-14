@@ -34,11 +34,9 @@ class CalendarController:
         WHERE t.dueDate LIKE ?
         GROUP BY t.taskId
 """
-        # Parse the string into a datetime object
-        date_object = datetime.strptime(date, "%Y-%m-%d")
-
+        date_object = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
         # Format the datetime object into the desired format
-        formatted_date = date_object.strftime("%d-%m-%Y")
+        formatted_date = date_object.strftime("%d-%m-%Y %H:%M:%S")
         cursor.execute(query, (formatted_date,))
         tasks = [(row[1], row[3], row[4]) for row in cursor.fetchall()]
         connection.close()
