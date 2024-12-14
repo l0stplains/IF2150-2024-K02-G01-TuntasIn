@@ -1,210 +1,89 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit
-from src.ui.folder_ui import FileFolderUI
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QMainWindow
+from src.models.folder import FileModel  # Import model FileModel
+import os
+from PyQt5.QtCore import QCoreApplication
+from src.components.navbar import NavBar
 
-class AddFileUI(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setupUi()
+Folder_Main = None
+class AddFileController:
+    def __init__(self, ui):
+        """
+        Initialize the controller with a reference to the UI instance.
+        """
+        self.ui = ui
+        self.model = FileModel()  # Inisialisasi model database
+        self.setup_connections()
 
-    def setupUi(self):
-        self.setObjectName("MainWidget")
-        self.resize(800, 600)
-        self.setMinimumSize(QtCore.QSize(800, 600))
-        self.setStyleSheet("QWidget {\n"
-                           "    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,\n"
-                           "                               stop:0 #F5F7FA, stop:1 #E8EAF6);\n"
-                           "}")
+    def setup_connections(self):
+        """
+        Connect UI buttons to their respective slot methods.
+        """
+        # self.ui.pushButtonTag.clicked.connect(self.add_tag)
+        self.ui.pushButtonFile.clicked.connect(self.upload_file)
+        self.ui.pushButtonTambah.clicked.connect(self.query_id)
 
-        self.Title = QLabel(self)
-        self.Title.setGeometry(QtCore.QRect(270, 50, 261, 71))
-        self.Title.setStyleSheet("QLabel {\n"
-                                 "    font-size: 30px;\n"
-                                 "    font-weight: bold;\n"
-                                 "    color: #7E57C2;\n"
-                                 "    padding: 12px 20px;\n"
-                                 "    border: none;\n"
-                                 "    background: transparent;\n"
-                                 "    font-family: \'Segoe UI\', Arial;\n"
-                                 "    letter-spacing: 1px;\n"
-                                 "}")
-        self.Title.setObjectName("Title")
+    def upload_file(self):
+        """
+        Handle the 'Upload File' button click.
+        """
+        file_name, _ = QFileDialog.getOpenFileName(
+            self.ui, 
+            "Select File", 
+            "", 
+            "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
+        )
+        if file_name:
+            QMessageBox.information(self.ui, "File Selected", f"File '{file_name}' selected!", QMessageBox.Ok)
+            self.ui.selected_file = file_name  # Store selected file path
+            
+    def query_id(self):
+        file_name = self.ui.lineEditNama.text()
+        if not file_name.strip():
+                task_id = -1
+        else:
+            # Check if the task exists in the Task table
+            query_task = "SELECT taskId FROM Task WHERE title = ?"
+            cursor = self.model.conn.execute(query_task, (file_name,))
+            task = cursor.fetchone()
 
-        self.widget = QWidget(self)
-        self.widget.setGeometry(QtCore.QRect(80, 140, 651, 276))
-        self.widget.setObjectName("widget")
-        self.verticalLayoutMain = QVBoxLayout(self.widget)
-        self.verticalLayoutMain.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayoutMain.setObjectName("verticalLayoutMain")
+            if not task:
+                QMessageBox.warning(self.ui, "Warning", f"No task with title '{file_name}' exists!")
+                return
 
-        self.labelNamaFile = QLabel(self.widget)
-        self.labelNamaFile.setStyleSheet("QLabel {\n"
-                                         "    font-weight: bold;\n"
-                                         "    font-size: 20px;\n"
-                                         "    padding: 0px 5px;\n"
-                                         "    font-family: \'Segoe UI\', Arial;\n"
-                                         "    color: #7E57C2;\n"
-                                         "}")
-        self.labelNamaFile.setObjectName("labelNamaFile")
-        self.verticalLayoutMain.addWidget(self.labelNamaFile)
+            # Get the taskId
+            task_id = task[0]
+            
+        self.add_task_file(task_id)
 
-        self.lineEditNama = QLineEdit(self.widget)
-        self.lineEditNama.setStyleSheet("QLineEdit {\n"
-                                        "    padding: 10px 20px;\n"
-                                        "    border: 2px solid #E8EAF6;\n"
-                                        "    border-radius: 8px;\n"
-                                        "    margin: 10px;\n"
-                                        "    font-size: 14px;\n"
-                                        "    background-color: white;\n"
-                                        "    min-width: 300px;\n"
-                                        "    color: #2C3E50;\n"
-                                        "}")
-        self.lineEditNama.setText("")
-        self.lineEditNama.setObjectName("lineEditNama")
-        self.verticalLayoutMain.addWidget(self.lineEditNama)
+    def add_task_file(self, task_id):
+        """
+        Handle the 'Tambah Tugas' button click.
+        """
+        # Get file path from UI (assuming a file was uploaded
+        
+        try:
+            file_path = getattr(self.ui, "selected_file", None)
+            if not file_path:
+                QMessageBox.warning(self.ui, "Warning", "No file selected!", QMessageBox.Ok)
+                return
+            # Save the file to the Attachment table
+            with open(file_path, 'rb') as file:
+                file_data = file.read()
 
-        self.labelTagTugas = QLabel(self.widget)
-        self.labelTagTugas.setStyleSheet("QLabel {\n"
-                                         "    font-weight: bold;\n"
-                                         "    font-size: 20px;\n"
-                                         "    padding: 0px 5px;\n"
-                                         "    font-family: \'Segoe UI\', Arial;\n"
-                                         "    color: #7E57C2;\n"
-                                         "}")
-        self.labelTagTugas.setObjectName("labelTagTugas")
-        self.verticalLayoutMain.addWidget(self.labelTagTugas)
+            # Calculate file size
+            file_size = len(file_data)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
+            # Insert the file into the Attachment table
+            query_attachment = """
+            INSERT INTO Attachment (taskId, fileName, filePath, fileSize, fileData) 
+            VALUES (?, ?, ?, ?, ?)
+            """
+            self.model.conn.execute(query_attachment, (task_id, os.path.basename(file_path), file_path, file_size, file_data))
+            self.model.conn.commit()
+        
+        except Exception as e:
+            QMessageBox.warning(self.ui, "Error", f"Failed to add task: {str(e)}", QMessageBox.Ok)
 
-        self.lineEditTag = QLineEdit(self.widget)
-        self.lineEditTag.setStyleSheet("QLineEdit {\n"
-                                       "    padding: 10px 20px;\n"
-                                       "    border: 2px solid #E8EAF6;\n"
-                                       "    border-radius: 8px;\n"
-                                       "    margin: 10px;\n"
-                                       "    font-size: 14px;\n"
-                                       "    background-color: white;\n"
-                                       "    min-width: 300px;\n"
-                                       "    color: #2C3E50;\n"
-                                       "}")
-        self.lineEditTag.setObjectName("lineEditTag")
-        self.horizontalLayout.addWidget(self.lineEditTag)
-
-        self.pushButtonTag = QPushButton(self.widget)
-        self.pushButtonTag.setStyleSheet("QPushButton {\n"
-                                         "    background-color: #7E57C2;\n"
-                                         "    color: white;\n"
-                                         "    border: none;\n"
-                                         "    border-radius: 10px;\n"
-                                         "    padding: 12px 24px;\n"
-                                         "    margin: 0 4px;\n"
-                                         "    font-size: 14px;\n"
-                                         "    font-weight: 500;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "    background-color: rgb(206, 174, 255);\n"
-                                         "}")
-        self.pushButtonTag.setObjectName("pushButtonTag")
-        self.horizontalLayout.addWidget(self.pushButtonTag)
-
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.verticalLayoutMain.addLayout(self.horizontalLayout)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-
-        self.pushButtonFile = QPushButton(self.widget)
-        self.pushButtonFile.setStyleSheet("QPushButton {\n"
-                                          "    background-color: #7E57C2;\n"
-                                          "    color: white;\n"
-                                          "    border: none;\n"
-                                          "    border-radius: 10px;\n"
-                                          "    padding: 12px 24px;\n"
-                                          "    margin: 0 4px;\n"
-                                          "    font-size: 14px;\n"
-                                          "    font-weight: 500;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QPushButton:hover{\n"
-                                          "    background-color: rgb(206, 174, 255);\n"
-                                          "}")
-        self.pushButtonFile.setObjectName("pushButtonFile")
-        self.horizontalLayout_2.addWidget(self.pushButtonFile)
-
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem1)
-        self.verticalLayoutMain.addLayout(self.horizontalLayout_2)
-
-        self.widget1 = QWidget(self)
-        self.widget1.setGeometry(QtCore.QRect(280, 480, 258, 43))
-        self.widget1.setObjectName("widget1")
-
-        self.horizontalLayout_3 = QHBoxLayout(self.widget1)
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-
-        self.pushButtonBatal = QPushButton(self.widget1)
-        self.pushButtonBatal.setStyleSheet("QPushButton {\n"
-                                           "    background-color: #EF5350;\n"
-                                           "    color: white;\n"
-                                           "    border: none;\n"
-                                           "    border-radius: 10px;\n"
-                                           "    padding: 12px 24px;\n"
-                                           "    margin: 0 4px;\n"
-                                           "    font-size: 14px;\n"
-                                           "    font-weight: 500;\n"
-                                           "}\n"
-                                           "\n"
-                                           "QPushButton:hover{\n"
-                                           "    background-color: rgb(206, 174, 255);\n"
-                                           "}")
-        self.pushButtonBatal.setObjectName("pushButtonBatal")
-        self.horizontalLayout_3.addWidget(self.pushButtonBatal)
-
-        self.pushButtonTambah = QPushButton(self.widget1)
-        self.pushButtonTambah.setStyleSheet("QPushButton {\n"
-                                            "    background-color: #66BB6A;\n"
-                                            "    color: white;\n"
-                                            "    border: none;\n"
-                                            "    border-radius: 10px;\n"
-                                            "    padding: 12px 24px;\n"
-                                            "    margin: 0 4px;\n"
-                                            "    font-size: 14px;\n"
-                                            "    font-weight: 500;\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:hover{\n"
-                                            "    background-color: rgb(206, 174, 255);\n"
-                                            "}")
-        self.pushButtonTambah.setObjectName("pushButtonTambah")
-        self.horizontalLayout_3.addWidget(self.pushButtonTambah)
-
-        self.retranslateUi()
-    
-    def backToPreviousWindow(self):
-        # Close the current window and show the previous window (FolderUI)
-        self.close()
-        self.previous_window = FileFolderUI()  # Assuming you have a FolderUI class
-        self.previous_window.show()
-
-    def retranslateUi(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("MainWidget", "File Tuntasin"))
-        self.Title.setText(_translate("MainWidget", "File Tuntasin"))
-        self.labelNamaFile.setText(_translate("MainWidget", "Nama File"))
-        self.labelTagTugas.setText(_translate("MainWidget", "Tag Tugas"))
-        self.pushButtonTag.setText(_translate("MainWidget", "Tambah Tag"))
-        self.pushButtonFile.setText(_translate("MainWidget", "Upload File"))
-        self.pushButtonBatal.setText(_translate("MainWidget", "Batal"))
-        self.pushButtonTambah.setText(_translate("MainWidget", "Tambah Tugas"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QApplication(sys.argv)
-    widget = AddFileUI()
-    widget.show()
-    sys.exit(app.exec_())
+        # Clear inputs
+        QMessageBox.information(self.ui, "Success", "File added successfully!", QMessageBox.Ok)
+        self.ui.lineEditNama.clear()

@@ -6,26 +6,25 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate
 import sqlite3
-from src.ui.add_task_ui import AddTaskUI
-from src.controllers.add_file_controller import AddFileController
+from .add_file_controller import AddFileController
 
 
 from PyQt5.QtWidgets import QMessageBox
 
 
 class AddTaskController:
-
     def __init__(self, ui):
-        """
-        Initialize the controller with a reference to the UI instance.
-        """
         self.ui = ui
+        self.add_file_controller = AddFileController(ui, False)  # Initialize file controller
         self.setup_connections()
 
     def setup_connections(self):
+        print("Connecting upload_file method...")  # Debugging
+        self.ui.pushButton_4.clicked.connect(self.add_file_controller.upload_file)
         self.ui.add.clicked.connect(self.add_task)
         self.ui.cancel.clicked.connect(self.home)
         self.ui.date.setDate(QDate.currentDate())
+
 
     def add_task(self):
         name = self.ui.name.text()
@@ -85,7 +84,8 @@ class AddTaskController:
             self.ui.tag3.setText("")
             self.ui.tag4.setText("")
             self.ui.tag5.setText("")
-
+            
+            self.add_file_controller.add_task_file(task_id, False)
             # Show success message box (using self.ui as the parent)
             QMessageBox.information(None, "Success", "Task and tags added successfully!")
 
