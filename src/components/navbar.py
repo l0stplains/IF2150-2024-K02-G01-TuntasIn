@@ -15,12 +15,10 @@ class NavBar(QWidget):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(10, 5, 10, 5)
         
-        # Logo/Brand
         brand = QPushButton("TuntasIn")
         brand.setObjectName("navBrand")
         brand.clicked.connect(self.home_clicked.emit)
         
-        # Navigation buttons
         home_btn = QPushButton("Home")
         home_btn.setObjectName("navButton")
         home_btn.clicked.connect(self.home_clicked.emit)
@@ -37,7 +35,6 @@ class NavBar(QWidget):
         progress_btn.setObjectName("navButton")
         progress_btn.clicked.connect(self.progress_clicked.emit)
         
-        # Add widgets to layout
         layout.addWidget(brand)
         layout.addWidget(home_btn)
         layout.addWidget(folder_btn)

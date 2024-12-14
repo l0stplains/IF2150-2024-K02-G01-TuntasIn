@@ -6,6 +6,7 @@ from src.components.navbar import NavBar
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 # from src.setup_database import setup_database  # Tambahkan ini
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -13,24 +14,19 @@ class MainWindow(QMainWindow):
         self.setup_ui()
         
     def setup_ui(self):
-        # Create central widget and layout
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
         
-        # Add navbar
         self.navbar = NavBar()
         layout.addWidget(self.navbar)
         
-        # Add home widget
         self.home_ui = HomeUI()
         self.home_controller = HomeController(self.home_ui)
         layout.addWidget(self.home_ui)
         
-        # Set window properties
         self.setMinimumSize(1280, 720)
         
-        # Connect navbar signals
         self.navbar.home_clicked.connect(lambda: self.home_ui.show())
         self.navbar.folder_clicked.connect(self.show_folder)
         self.navbar.calendar_clicked.connect(self.show_calendar)
@@ -51,8 +47,6 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)
-    
-    # Load stylesheet
     try:
         with open('src/styles/main.qss', 'r') as f:
             app.setStyleSheet(f.read())
