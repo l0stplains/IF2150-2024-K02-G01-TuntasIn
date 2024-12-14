@@ -12,7 +12,6 @@ class FilterDialog(QDialog):
         self.setWindowTitle("Filter Tasks")
         layout = QVBoxLayout(self)
         
-        # Category filter
         cat_layout = QHBoxLayout()
         cat_layout.addWidget(QLabel("Category:"))
         self.category_combo = QComboBox()
@@ -20,7 +19,6 @@ class FilterDialog(QDialog):
         cat_layout.addWidget(self.category_combo)
         layout.addLayout(cat_layout)
         
-        # Tag filter
         tag_layout = QHBoxLayout()
         tag_layout.addWidget(QLabel("Tag:"))
         self.tag_combo = QComboBox()
@@ -28,7 +26,6 @@ class FilterDialog(QDialog):
         tag_layout.addWidget(self.tag_combo)
         layout.addLayout(tag_layout)
 
-        # Status filter
         status_layout = QHBoxLayout()
         status_layout.addWidget(QLabel("Status:"))
         self.status_combo = QComboBox()
@@ -38,7 +35,6 @@ class FilterDialog(QDialog):
         status_layout.addWidget(self.status_combo)
         layout.addLayout(status_layout)
         
-        # Buttons
         btn_layout = QHBoxLayout()
         apply_btn = QPushButton("Apply")
         apply_btn.clicked.connect(self.accept)
@@ -55,14 +51,12 @@ class FilterDialog(QDialog):
     def load_filter_options(self):
         conn = sqlite3.connect('tasks.db')
         cursor = conn.cursor()
-        
-        # Load categories
-        cursor.execute("SELECT DISTINCT category FROM tasks")
+    
+        cursor.execute("SELECT DISTINCT category FROM Task")
         categories = cursor.fetchall()
         for category in categories:
             self.category_combo.addItem(category[0], category[0])
-            
-        # Load tags
+
         cursor.execute("SELECT DISTINCT name FROM tags")
         tags = cursor.fetchall()
         for tag in tags:
@@ -88,12 +82,15 @@ class HomeController:
         self.db_path = 'tasks.db'
         self.current_filters = {'category': None, 'tag': None, 'status': None}
         
-        # Connect signals
         self.view.search_input.textChanged.connect(self.filter_tasks)
         self.view.add_btn.clicked.connect(self.add_task)
         self.view.filter_btn.clicked.connect(self.show_filter_dialog)
         
         self.load_tasks()
+
+    def filter_tasks(self):
+        search_text = self.view.search_input.text()
+        self.load_tasks(search_text)
         
     def load_tasks(self, search_text=""):
         self.view.clear_tasks()
@@ -102,56 +99,50 @@ class HomeController:
         cursor = conn.cursor()
         
         query = """
-        SELECT t.id, t.name, t.category, t.status, t.due_date, GROUP_CONCAT(tag.name)
-        FROM tasks t
-        LEFT JOIN tags tag ON t.id = tag.task_id
-        WHERE t.name LIKE ?
+        SELECT t.taskId, t.title, t.category, t.isComplete, t.dueDate, GROUP_CONCAT(tag.name)
+        FROM Task t
+        LEFT JOIN tags tag ON t.taskId = tag.task_id
+        WHERE t.title LIKE ?
         """
         params = [f'%{search_text}%']
         
-        # Add category filter
         if self.current_filters['category']:
             query += " AND t.category = ?"
             params.append(self.current_filters['category'])
             
-        # Add tag filter
         if self.current_filters['tag']:
             query += """ AND EXISTS (
                 SELECT 1 FROM tags 
-                WHERE tags.task_id = t.id 
+                WHERE tags.task_id = t.taskId 
                 AND tags.name = ?
             )"""
             params.append(self.current_filters['tag'])
 
-        # Add status filter
         if self.current_filters['status']:
-            query += " AND t.status = ?"
-            params.append(self.current_filters['status'])
+            query += " AND t.isComplete = ?"
+            is_complete = 1 if self.current_filters['status'] == "Completed" else 0
+            params.append(is_complete)
             
         query += """
-        GROUP BY t.id
-        ORDER BY t.due_date DESC
+        GROUP BY t.taskId
+        ORDER BY t.dueDate DESC
         """
         
         cursor.execute(query, tuple(params))
         tasks = cursor.fetchall()
         
         for task in tasks:
-            task_id, name, category, status, due_date, tags = task
+            task_id, title, category, is_complete, due_date, tags = task
             tags = tags.split(',') if tags else []
             
-            due_date = datetime.strptime(due_date, '%Y-%m-%d').strftime('%d %B %Y')
+            status = "Completed" if is_complete else "Not Completed"
             
-            task_widget = self.view.add_task(task_id, name, category, tags, status, due_date)
+            task_widget = self.view.add_task(task_id, title, category, tags, status, due_date)
             task_widget.clicked.connect(self.show_task_details)
             task_widget.edit_clicked.connect(self.edit_task)
             task_widget.delete_clicked.connect(self.delete_task)
             
         conn.close()
-        
-    def filter_tasks(self):
-        search_text = self.view.search_input.text()
-        self.load_tasks(search_text)
         
     def show_filter_dialog(self):
         dialog = FilterDialog(self.view)
@@ -184,9 +175,8 @@ class HomeController:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             
-            # Delete tags first due to foreign key constraint
             cursor.execute("DELETE FROM tags WHERE task_id = ?", (task_id,))
-            cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+            cursor.execute("DELETE FROM Task WHERE taskId = ?", (task_id,))
             
             conn.commit()
             conn.close()

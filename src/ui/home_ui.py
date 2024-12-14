@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QFrame, QScrollArea)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
+                          QLineEdit, QFrame, QScrollArea)
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
@@ -18,7 +19,6 @@ class TaskWidget(QFrame):
         
         layout = QVBoxLayout(self)
         
-        # Top section with name and status
         top_layout = QHBoxLayout()
         name_label = QLabel(name)
         name_label.setFont(QFont("Arial", 12, QFont.Bold))
@@ -28,7 +28,6 @@ class TaskWidget(QFrame):
         status_label.setObjectName("statusLabel")
         top_layout.addWidget(status_label, alignment=Qt.AlignRight)
         
-        # Middle section with category and tags
         middle_layout = QHBoxLayout()
         category_label = QLabel(category)
         category_label.setObjectName("categoryLabel")
@@ -40,7 +39,6 @@ class TaskWidget(QFrame):
             middle_layout.addWidget(tag_label)
         middle_layout.addStretch()
         
-        # Bottom section with due date and buttons
         bottom_layout = QHBoxLayout()
         due_date_label = QLabel(due_date)
         due_date_label.setObjectName("dueDateLabel")
@@ -58,14 +56,12 @@ class TaskWidget(QFrame):
         bottom_layout.addWidget(edit_btn)
         bottom_layout.addWidget(delete_btn)
         
-        # Add all sections to main layout
         layout.addLayout(top_layout)
         layout.addLayout(middle_layout)
         layout.addLayout(bottom_layout)
         
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            # Only emit if not clicking buttons
             if not self.childAt(event.pos()):
                 self.clicked.emit(self.task_id)
         super().mousePressEvent(event)
@@ -78,8 +74,7 @@ class HomeUI(QWidget):
     def setup_ui(self):
         self.setObjectName("homeWidget")
         main_layout = QVBoxLayout(self)
-        
-        # Search bar
+
         search_layout = QHBoxLayout()
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("Search tasks...")
@@ -94,7 +89,6 @@ class HomeUI(QWidget):
         search_layout.addWidget(self.add_btn)
         search_layout.addWidget(self.filter_btn)
         
-        # Scrollable task area
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setObjectName("taskScrollArea")
@@ -114,7 +108,7 @@ class HomeUI(QWidget):
         return task_widget
         
     def clear_tasks(self):
-        while self.task_layout.count() > 1:  # Keep the stretch
+        while self.task_layout.count() > 1:
             item = self.task_layout.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
