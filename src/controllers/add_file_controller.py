@@ -54,7 +54,7 @@ class AddFileController:
             # Get the taskId
             task_id = task[0]
             
-        self.add_task_file(task_id)
+        self.add_task_file(task_id, True)
 
     def add_task_file(self, task_id, isInside):
         """
