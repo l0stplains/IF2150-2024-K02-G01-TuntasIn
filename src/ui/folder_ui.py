@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QGridLayout, QHBoxLayout, QWidget
-from PyQt5.QtWidgets import QLabel, QPushButton, QScrollArea
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QLabel, QPushButton, QScrollArea, QMessageBox
+from PyQt5.QtGui import QPixmap, QFontMetrics
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+import os
+
 
 
 class FileFolderUI(QMainWindow):
@@ -21,11 +23,9 @@ class FileFolderUI(QMainWindow):
         # Add and Filter Buttons
         button_layout = QHBoxLayout()
         self.add_button = QPushButton("Add")
-        self.filter_button = QPushButton("Filter")
 
         button_layout.addStretch()  # Push buttons to the right
-        self.add_button.setFixedWidth(120)
-        self.filter_button.setFixedWidth(120)
+        self.add_button.setFixedWidth(500)
 
         # Style buttons (optional)
         self.add_button.setStyleSheet("""
@@ -40,22 +40,9 @@ class FileFolderUI(QMainWindow):
                 background-color: #0056b3;
             }
         """)
-        self.filter_button.setStyleSheet("""
-            QPushButton {
-                padding: 5px 10px;
-                background-color: #28A745;
-                color: white;
-                border: none;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #1e7e34;
-            }
-        """)
-
+        
         # Add buttons to layout
         button_layout.addWidget(self.add_button)
-        button_layout.addWidget(self.filter_button)
         button_layout.addStretch()  # Push buttons to the left
 
         # Add button layout to main layout
@@ -67,8 +54,10 @@ class FileFolderUI(QMainWindow):
 
         # Container for the grid layout
         grid_container = QWidget()
-        grid_layout = QGridLayout(grid_container)
-        grid_layout.setSpacing(20)  # Add spacing between cards
+        self.grid_layout = QGridLayout(grid_container)
+        self.grid_layout.setHorizontalSpacing(10)  # Keep horizontal spacing larger
+        self.grid_layout.setVerticalSpacing(10)  # Reduce vertical gap
+        # grid_layout.rowStretch(100)  # Push everything to the top 
         
         # Set the stylesheet for grid_container
         grid_container.setStyleSheet("""
@@ -80,47 +69,43 @@ class FileFolderUI(QMainWindow):
 
         # Add some cards
         self.cards = []
-        cards = [
-            ("Title 1", "This is the first card.", "img/pdf.png"),
-            ("Title 2", "This is the second card.", "img/txt.png"),
-            ("Title 3", "This is the third card.", "img/word.png"),
-            ("Title 4", "This is the fourth card.", "img/pdf.png"),
-            ("Title 5", "This is the fifth card.", "img/txt.png"),
-            ("Title 6", "This is the sixth card.", "img/word.png"),
-        ]
-
-        row, col = 0, 0
-        for title, description, icon in cards:
-            card = Card(title, description, icon, self)
-            grid_layout.addWidget(card, row, col)
-            
-            self.cards.append(card)  # Store the card reference
-
-            col += 1
-            if col > 2:  # Limit to 3 cards per row
-                col = 0
-                row += 1
-
+        
         # Set grid container as the widget for the scroll area
         scroll_area.setWidget(grid_container)
-
         # Add scroll area to main layout
         main_layout.addWidget(scroll_area)
+        
+    def add_card(self, file_path, name=None, task=None):
+        # Check if name and tag are provided, otherwise use defaults
+        name = name or "Unnamed File"
+        task = task or "No Tag"
+
+        # Use default or dynamic icon based on file extension
+        if name.endswith((".png", ".jpg", ".jpeg", ".bmp")):
+            icon_path = "img/image.png"
+        elif name.endswith((".docx")):
+            icon_path = "img/word.png"
+        elif name.endswith((".pdf")):
+            icon_path = "img/pdf.png"
+        elif name.endswith((".txt")):
+            icon_path = "img/txt.png"
+
+        # Create the card widget
+        card = Card(name, task, icon_path, file_path, self)
+        row, col = len(self.cards) // 3, len(self.cards) % 3  # 3 cards per row
+
+        # Add the card to the grid layout
+        self.grid_layout.addWidget(card, row, col)
+        self.cards.append(card)
+
 
 
 class Card(QWidget):
-    def __init__(self, title: str, description: str, icon_path: str, parent=None):
+    def __init__(self, name, task, icon_path, file_path, parent=None):
         super().__init__(parent)
-        self.setFixedSize(200, 250)  # Set the card's size
-
-        # # Add shadow effect
-        # shadow = QGraphicsDropShadowEffect(self)
-        # shadow.setBlurRadius(15)  # Adjust the blur radius
-        # shadow.setXOffset(5)  # Horizontal offset
-        # shadow.setYOffset(5)  # Vertical offset
-        # shadow.setColor(Qt.gray)  # Shadow color
-        # self.setGraphicsEffect(shadow)
-
+        self.file_path = file_path  # Store the file path for later use
+        # self.setFixedSize(200, 250)  # Set the card's size
+        self.setMaximumWidth(400)
         self.setStyleSheet("""
             QWidget {   
                 border: 1px solid #ccc;
@@ -131,25 +116,42 @@ class Card(QWidget):
 
         # Vertical layout for the card
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(10, 10, 10, 10)  # Add padding inside the card
-        layout.setSpacing(10)
+        layout.setContentsMargins(5, 5, 5, 5)  # Add padding inside the card
+        layout.setSpacing(5)
+        # layout.setAlignment(Qt.AlignTop)  # Align content to the top
 
         # Icon/Image
         icon_label = QLabel(self)
+        # icon_label.setFixedSize(120, 120)  # Set fixed size for the icon
         icon_label.setAlignment(Qt.AlignCenter)
         pixmap = QPixmap(icon_path).scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         icon_label.setPixmap(pixmap)
 
         # Title
-        title_label = QLabel(title, self)
+        title_label = QLabel(name, self)
         title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #333;")
         title_label.setAlignment(Qt.AlignCenter)
+        title_label.setWordWrap(True)  # Enable text wrapping for long titles
+        title_label.setFixedHeight(30)  # Limit the height of the title
 
         # Description
-        desc_label = QLabel(description, self)
-        desc_label.setStyleSheet("font-size: 12px; color: #666;")
-        desc_label.setAlignment(Qt.AlignCenter)
-        desc_label.setWordWrap(True)  # Enable text wrapping for long descriptions
+        task_label = QLabel(task, self)
+        task_label.setStyleSheet("font-size: 12px; color: #666;")
+        task_label.setAlignment(Qt.AlignCenter)
+        task_label.setWordWrap(True)  # Enable text wrapping for long descriptions
+        task_label.setFixedHeight(20)
+        
+        # Truncate title if it's too long
+        font_metrics = QFontMetrics(title_label.font())
+        max_width = title_label.width() - 20  # Subtracting some padding for appearance
+        title_width = font_metrics.width(name)
+        task_width = font_metrics.width(task)
+
+        if title_width > max_width:
+            truncated_title = font_metrics.elidedText(name, Qt.ElideRight, max_width)
+            truncated_task = font_metrics.elidedText(task, Qt.ElideRight, max_width)
+            title_label.setText(truncated_title)
+            task_label.setText(truncated_task)
 
         # Open File button
         self.open_file_button = QPushButton("Open File", self)
@@ -165,13 +167,35 @@ class Card(QWidget):
                 background-color: #45a049;
             }
         """)
+        self.open_file_button.clicked.connect(self.open_file_from_card)
 
         # Add widgets to layout
         layout.addWidget(icon_label)
         layout.addWidget(title_label)
-        layout.addWidget(desc_label)
+        layout.addWidget(task_label)
         layout.addWidget(self.open_file_button)
-        layout.addStretch()  # Push everything to the top
+        # layout.addStretch()  # Push everything to the top
+        
+    def open_file_from_card(self):
+        """
+        Open the file associated with the current card.
+        """
+        if not self.file_path:
+            QMessageBox.warning(self, "Error", "File path not found!")
+            return
+
+        if os.path.exists(self.file_path):
+            try:
+                if os.name == 'nt':  # Windows
+                    os.startfile(self.file_path)
+                elif os.name == 'posix':  # macOS/Linux
+                    subprocess.run(["xdg-open", self.file_path], check=True)
+                else:
+                    QMessageBox.warning(self, "Error", "Unsupported operating system.")
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"Failed to open file: {str(e)}")
+        else:
+            QMessageBox.warning(self, "Error", f"File does not exist: {self.file_path}")
 
 
 # Run the application
