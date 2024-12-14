@@ -173,13 +173,10 @@ class HomeController:
         task_dialog.exec_()
         
     def show_task_details(self, task_id):
-        task_dialog = QDialog()
-        
-        task_view_ui = TaskViewUI(task_dialog)
-        
+        dialog = QDialog()
+        task_view_ui = TaskViewUI(dialog)
         task_controller = TaskViewController(task_view_ui, task_id)
-        
-        task_dialog.exec_()
+        dialog.exec_()
         
     def delete_task(self, task_id):
         reply = QMessageBox.question(

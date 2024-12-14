@@ -19,7 +19,7 @@ class TaskViewController:
         self.load_task_details()
 
     def setup_connections(self):
-        self.ui.back.clicked.connect(self.home)
+        self.ui.back.clicked.connect(self.ui.widget.parent().close)
         self.ui.delete_2.clicked.connect(self.delete)
         self.ui.edit.clicked.connect(self.edit)
         self.ui.file.clicked.connect(self.query_filepath)

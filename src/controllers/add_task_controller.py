@@ -29,7 +29,7 @@ class AddTaskController:
     def add_task(self):
         name = self.ui.name.text()
         description = self.ui.description.toPlainText()
-        date = self.ui.date.date().toString("dd-MM-yyyy")
+        date = self.ui.date.dateTime().toString("dd-MM-yyyy HH:mm:ss")
         category = self.ui.category.currentText()
 
         tags = [
