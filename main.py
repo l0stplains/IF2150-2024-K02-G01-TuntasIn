@@ -15,6 +15,7 @@ from src.controllers.progress_controller import ProgressController
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QStackedWidget, QDialog, QScrollArea
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
+from src.ui.notification_ui import NotificationWindow
 # from src.setup_database import setup_database  # Tambahkan ini
 
 class MainWindow(QMainWindow):
@@ -27,6 +28,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("TuntasIn")
         self.setup_ui()
+        
+        self.show_notification()
         
     def setup_ui(self):
         # Create central widget and layout
@@ -90,9 +93,18 @@ class MainWindow(QMainWindow):
 
     def show_add_task(self):
         self.stacked_widget.setCurrentWidget(self.add_task_ui)
+        
     def show_home(self):
         self.home_controller.load_tasks()
         self.stacked_widget.setCurrentWidget(self.home_ui)
+        
+    def show_notification(self):
+        self.notification_window = NotificationWindow(self)
+        self.notification_window.update_notifications()
+        # self.notification_window.update_notifications(["Selamat datang di TuntasIn!"])
+        self.notification_window.show() 
+
+# taro di bawah def show_add_file
 if __name__ == '__main__':
     
     app = QApplication(sys.argv)
