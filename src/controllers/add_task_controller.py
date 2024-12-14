@@ -1,39 +1,54 @@
 import sys
+import os
+
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate
 import sqlite3
+from src.ui.add_task_ui import AddTaskUI
 
-class AddTask(QDialog):
-    def __init__(self):
-        super(AddTask, self).__init__()
-        loadUi("../ui/add_task_ui.ui", self)
-        self.add.clicked.connect(self.addtask)
-        self.cancel.clicked.connect(self.home)
-        self.date.setDate(QDate.currentDate())
-        
 
-    def addtask(self):
-        name = self.name.text()
-        description = self.description.toPlainText()
-        date = self.date.date().toString("dd-MM-yyyy") 
-        category = self.category.currentText()
-        
+from PyQt5.QtWidgets import QMessageBox
+
+
+class AddTaskController:
+
+    def __init__(self, ui):
+        """
+        Initialize the controller with a reference to the UI instance.
+        """
+        self.ui = ui
+        self.setup_connections()
+
+    def setup_connections(self):
+        self.ui.add.clicked.connect(self.add_task)
+        self.ui.cancel.clicked.connect(self.home)
+        self.ui.date.setDate(QDate.currentDate())
+
+    def add_task(self):
+        name = self.ui.name.text()
+        description = self.ui.description.toPlainText()
+        date = self.ui.date.date().toString("dd-MM-yyyy")
+        category = self.ui.category.currentText()
+
         tags = [
-            self.tag1.text().strip(),
-            self.tag2.text().strip(),
-            self.tag3.text().strip(),
-            self.tag4.text().strip(),
-            self.tag5.text().strip(),
+            self.ui.tag1.text().strip(),
+            self.ui.tag2.text().strip(),
+            self.ui.tag3.text().strip(),
+            self.ui.tag4.text().strip(),
+            self.ui.tag5.text().strip(),
         ]
 
         if len(name) == 0:  # Validate required fields
-            self.nameWarning.setText("Name cannot be blank!")
+            self.ui.nameWarning.setText("Name cannot be blank!")
             return
 
         try:
-            conn = sqlite3.connect("../../tasks.db")
+            DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'tasks.db')
+
+            # Then in the add_task method:
+            conn = sqlite3.connect(DB_PATH)
             cur = conn.cursor()
 
             # Insert task into Task table
@@ -61,36 +76,23 @@ class AddTask(QDialog):
 
             # Clear the form fields after successful insertion
             print("Task and tags added successfully!")
-            self.nameWarning.setText("")
-            self.name.setText("")
-            self.description.setText("")
-            self.tag1.setText("")
-            self.tag2.setText("")
-            self.tag3.setText("")
-            self.tag4.setText("")
-            self.tag5.setText("")
-            
-            # Show success message box
-            QMessageBox.information(self, "Success", "Task and tags added successfully!")
+            self.ui.nameWarning.setText("")
+            self.ui.name.setText("")
+            self.ui.description.setText("")
+            self.ui.tag1.setText("")
+            self.ui.tag2.setText("")
+            self.ui.tag3.setText("")
+            self.ui.tag4.setText("")
+            self.ui.tag5.setText("")
+
+            # Show success message box (using self.ui as the parent)
+            QMessageBox.information(None, "Success", "Task and tags added successfully!")
 
         except sqlite3.Error as e:
             print("Error while inserting task or tags:", e)
             # Show error message box
-            QMessageBox.critical(self, "Error", f"Failed to add task and tags: {e}")
-
+            QMessageBox.critical(None, "Error", f"Failed to add task and tags: {e}")
 
     def home(self):
-        pass
-app = QApplication(sys.argv)
-addtask = AddTask()
-widget = QStackedWidget()
-widget.addWidget(addtask)
-
-widget.setFixedHeight(1024)
-widget.setFixedWidth(1280)
-widget.show()
-
-try:
-    sys.exit(app.exec())
-except Exception as e:
-    print("Exiting:", e)
+        QMessageBox.information(None, "Cancel", "Operation cancelled.")
+        self.ui.close()
