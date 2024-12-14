@@ -1,5 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit, QSpacerItem, QSizePolicy
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from src.ui.folder_ui import FileFolderUI
 
 class AddFileUI(QWidget):
@@ -9,198 +12,196 @@ class AddFileUI(QWidget):
 
     def setupUi(self):
         self.setObjectName("MainWidget")
-        self.resize(800, 600)
         self.setMinimumSize(QtCore.QSize(800, 600))
         self.setStyleSheet("QWidget {\n"
                            "    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1,\n"
                            "                               stop:0 #F5F7FA, stop:1 #E8EAF6);\n"
                            "}")
 
-        self.Title = QLabel(self)
-        self.Title.setGeometry(QtCore.QRect(270, 50, 261, 71))
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(100, 0, 100, 200)  # Add margin around the main layout
+
+        # Title Section
+        self.Title = QLabel("File Tuntasin", self)
         self.Title.setStyleSheet("QLabel {\n"
                                  "    font-size: 30px;\n"
                                  "    font-weight: bold;\n"
                                  "    color: #7E57C2;\n"
-                                 "    padding: 12px 20px;\n"
-                                 "    border: none;\n"
-                                 "    background: transparent;\n"
-                                 "    font-family: \'Segoe UI\', Arial;\n"
+                                 "    text-align: center;\n"
+                                 "    font-family: 'Segoe UI', Arial;\n"
                                  "    letter-spacing: 1px;\n"
                                  "}")
-        self.Title.setObjectName("Title")
+        self.Title.setAlignment(QtCore.Qt.AlignCenter)
+        main_layout.addWidget(self.Title)
 
-        self.widget = QWidget(self)
-        self.widget.setGeometry(QtCore.QRect(80, 140, 651, 276))
-        self.widget.setObjectName("widget")
-        self.verticalLayoutMain = QVBoxLayout(self.widget)
-        self.verticalLayoutMain.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayoutMain.setObjectName("verticalLayoutMain")
+        # Form Section
+        form_layout = QVBoxLayout()
+        form_layout.setSpacing(15)  # Set spacing between form elements
 
-        self.labelNamaFile = QLabel(self.widget)
+        # File Name Input
+        self.labelNamaFile = QLabel("Nama Task", self)
         self.labelNamaFile.setStyleSheet("QLabel {\n"
                                          "    font-weight: bold;\n"
                                          "    font-size: 20px;\n"
-                                         "    padding: 0px 5px;\n"
-                                         "    font-family: \'Segoe UI\', Arial;\n"
+                                         "    font-family: 'Segoe UI', Arial;\n"
                                          "    color: #7E57C2;\n"
                                          "}")
-        self.labelNamaFile.setObjectName("labelNamaFile")
-        self.verticalLayoutMain.addWidget(self.labelNamaFile)
+        form_layout.addWidget(self.labelNamaFile)
 
-        self.lineEditNama = QLineEdit(self.widget)
+        self.lineEditNama = QLineEdit(self)
+        self.lineEditNama.setPlaceholderText("Masukkan nama Task yang berkaitan dengan file, jika tidak ada kosongkan")
         self.lineEditNama.setStyleSheet("QLineEdit {\n"
                                         "    padding: 10px 20px;\n"
                                         "    border: 2px solid #E8EAF6;\n"
                                         "    border-radius: 8px;\n"
-                                        "    margin: 10px;\n"
                                         "    font-size: 14px;\n"
                                         "    background-color: white;\n"
-                                        "    min-width: 300px;\n"
                                         "    color: #2C3E50;\n"
                                         "}")
-        self.lineEditNama.setText("")
-        self.lineEditNama.setObjectName("lineEditNama")
-        self.verticalLayoutMain.addWidget(self.lineEditNama)
+        form_layout.addWidget(self.lineEditNama)
 
-        self.labelTagTugas = QLabel(self.widget)
-        self.labelTagTugas.setStyleSheet("QLabel {\n"
-                                         "    font-weight: bold;\n"
-                                         "    font-size: 20px;\n"
-                                         "    padding: 0px 5px;\n"
-                                         "    font-family: \'Segoe UI\', Arial;\n"
-                                         "    color: #7E57C2;\n"
-                                         "}")
-        self.labelTagTugas.setObjectName("labelTagTugas")
-        self.verticalLayoutMain.addWidget(self.labelTagTugas)
+        # # Task Tag Input
+        # self.labelTagTugas = QLabel("Tag Tugas", self)
+        # self.labelTagTugas.setStyleSheet("QLabel {\n"
+        #                                  "    font-weight: bold;\n"
+        #                                  "    font-size: 20px;\n"
+        #                                  "    font-family: 'Segoe UI', Arial;\n"
+        #                                  "    color: #7E57C2;\n"
+        #                                  "}")
+        # form_layout.addWidget(self.labelTagTugas)
+        
+        # # Input Tag
+        # tag_layout = QVBoxLayout()
+        # tag_input_layout = QHBoxLayout()
+        # self.lineEditTag1 = QLineEdit(self)
+        # self.lineEditTag1.setPlaceholderText("Masukkan tag tugas")
+        # self.lineEditTag1.setStyleSheet("QLineEdit {\n"
+        #                                "    padding: 10px 20px;\n"
+        #                                "    border: 2px solid #E8EAF6;\n"
+        #                                "    border-radius: 8px;\n"
+        #                                "    font-size: 14px;\n"
+        #                                "    background-color: white;\n"
+        #                                "    color: #2C3E50;\n"
+        #                                "}")
+        
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
+        # self.lineEditTag2 = QLineEdit(self)
+        # self.lineEditTag2.setPlaceholderText("Masukkan tag tugas")
+        # self.lineEditTag2.setStyleSheet("QLineEdit {\n"
+        #                                "    padding: 10px 20px;\n"
+        #                                "    border: 2px solid #E8EAF6;\n"
+        #                                "    border-radius: 8px;\n"
+        #                                "    font-size: 14px;\n"
+        #                                "    background-color: white;\n"
+        #                                "    color: #2C3E50;\n"
+        #                                "}")
+        
+        # self.lineEditTag3 = QLineEdit(self)
+        # self.lineEditTag3.setPlaceholderText("Masukkan tag tugas")
+        # self.lineEditTag3.setStyleSheet("QLineEdit {\n"
+        #                                "    padding: 10px 20px;\n"
+        #                                "    border: 2px solid #E8EAF6;\n"
+        #                                "    border-radius: 8px;\n"
+        #                                "    font-size: 14px;\n"
+        #                                "    background-color: white;\n"
+        #                                "    color: #2C3E50;\n"
+        #                                "}")
 
-        self.lineEditTag = QLineEdit(self.widget)
-        self.lineEditTag.setStyleSheet("QLineEdit {\n"
-                                       "    padding: 10px 20px;\n"
-                                       "    border: 2px solid #E8EAF6;\n"
-                                       "    border-radius: 8px;\n"
-                                       "    margin: 10px;\n"
-                                       "    font-size: 14px;\n"
-                                       "    background-color: white;\n"
-                                       "    min-width: 300px;\n"
-                                       "    color: #2C3E50;\n"
-                                       "}")
-        self.lineEditTag.setObjectName("lineEditTag")
-        self.horizontalLayout.addWidget(self.lineEditTag)
+        
+        # self.lineEditTag4 = QLineEdit(self)
+        # self.lineEditTag4.setPlaceholderText("Masukkan tag tugas")
+        # self.lineEditTag4.setStyleSheet("QLineEdit {\n"
+        #                                "    padding: 10px 20px;\n"
+        #                                "    border: 2px solid #E8EAF6;\n"
+        #                                "    border-radius: 8px;\n"
+        #                                "    font-size: 14px;\n"
+        #                                "    background-color: white;\n"
+        #                                "    color: #2C3E50;\n"
+        #                                "}")
 
-        self.pushButtonTag = QPushButton(self.widget)
-        self.pushButtonTag.setStyleSheet("QPushButton {\n"
-                                         "    background-color: #7E57C2;\n"
-                                         "    color: white;\n"
-                                         "    border: none;\n"
-                                         "    border-radius: 10px;\n"
-                                         "    padding: 12px 24px;\n"
-                                         "    margin: 0 4px;\n"
-                                         "    font-size: 14px;\n"
-                                         "    font-weight: 500;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "    background-color: rgb(206, 174, 255);\n"
-                                         "}")
-        self.pushButtonTag.setObjectName("pushButtonTag")
-        self.horizontalLayout.addWidget(self.pushButtonTag)
+        
+        # self.lineEditTag5 = QLineEdit(self)
+        # self.lineEditTag5.setPlaceholderText("Masukkan tag tugas")
+        # self.lineEditTag5.setStyleSheet("QLineEdit {\n"
+        #                                "    padding: 10px 20px;\n"
+        #                                "    border: 2px solid #E8EAF6;\n"
+        #                                "    border-radius: 8px;\n"
+        #                                "    font-size: 14px;\n"
+        #                                "    background-color: white;\n"
+        #                                "    color: #2C3E50;\n"
+        #                                "}")
 
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.verticalLayoutMain.addLayout(self.horizontalLayout)
+        # tag_input_layout.addWidget(self.lineEditTag1)
+        # tag_input_layout.addWidget(self.lineEditTag2)
+        # tag_input_layout.addWidget(self.lineEditTag3)
+        # tag_input_layout.addWidget(self.lineEditTag4)
+        # tag_input_layout.addWidget(self.lineEditTag5)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        # tag_layout.addLayout(tag_input_layout)
+        # form_layout.addLayout(tag_layout)
 
-        self.pushButtonFile = QPushButton(self.widget)
+        # File Upload Button
+        upload_button_layout = QHBoxLayout()
+        self.pushButtonFile = QPushButton("Upload File", self)
         self.pushButtonFile.setStyleSheet("QPushButton {\n"
                                           "    background-color: #7E57C2;\n"
                                           "    color: white;\n"
                                           "    border: none;\n"
                                           "    border-radius: 10px;\n"
                                           "    padding: 12px 24px;\n"
-                                          "    margin: 0 4px;\n"
                                           "    font-size: 14px;\n"
                                           "    font-weight: 500;\n"
                                           "}\n"
-                                          "\n"
-                                          "QPushButton:hover{\n"
+                                          "QPushButton:hover {\n"
                                           "    background-color: rgb(206, 174, 255);\n"
                                           "}")
-        self.pushButtonFile.setObjectName("pushButtonFile")
-        self.horizontalLayout_2.addWidget(self.pushButtonFile)
+        upload_button_layout.addWidget(self.pushButtonFile, alignment=QtCore.Qt.AlignLeft)
+        form_layout.addLayout(upload_button_layout)
 
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem1)
-        self.verticalLayoutMain.addLayout(self.horizontalLayout_2)
+        main_layout.addLayout(form_layout)
 
-        self.widget1 = QWidget(self)
-        self.widget1.setGeometry(QtCore.QRect(280, 480, 258, 43))
-        self.widget1.setObjectName("widget1")
+        # Bottom Buttons
+        button_layout = QHBoxLayout()
+        button_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        self.horizontalLayout_3 = QHBoxLayout(self.widget1)
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-
-        self.pushButtonBatal = QPushButton(self.widget1)
+        self.pushButtonBatal = QPushButton("Batal", self)
         self.pushButtonBatal.setStyleSheet("QPushButton {\n"
                                            "    background-color: #EF5350;\n"
                                            "    color: white;\n"
                                            "    border: none;\n"
                                            "    border-radius: 10px;\n"
                                            "    padding: 12px 24px;\n"
-                                           "    margin: 0 4px;\n"
                                            "    font-size: 14px;\n"
                                            "    font-weight: 500;\n"
                                            "}\n"
-                                           "\n"
-                                           "QPushButton:hover{\n"
-                                           "    background-color: rgb(206, 174, 255);\n"
+                                           "QPushButton:hover {\n"
+                                           "    background-color: rgb(255, 102, 102);\n"
                                            "}")
-        self.pushButtonBatal.setObjectName("pushButtonBatal")
-        self.horizontalLayout_3.addWidget(self.pushButtonBatal)
+        button_layout.addWidget(self.pushButtonBatal)
 
-        self.pushButtonTambah = QPushButton(self.widget1)
+        self.pushButtonTambah = QPushButton("Tambah Tugas", self)
         self.pushButtonTambah.setStyleSheet("QPushButton {\n"
                                             "    background-color: #66BB6A;\n"
                                             "    color: white;\n"
                                             "    border: none;\n"
                                             "    border-radius: 10px;\n"
                                             "    padding: 12px 24px;\n"
-                                            "    margin: 0 4px;\n"
                                             "    font-size: 14px;\n"
                                             "    font-weight: 500;\n"
                                             "}\n"
-                                            "\n"
-                                            "QPushButton:hover{\n"
-                                            "    background-color: rgb(206, 174, 255);\n"
+                                            "QPushButton:hover {\n"
+                                            "    background-color: rgb(102, 204, 102);\n"
                                             "}")
-        self.pushButtonTambah.setObjectName("pushButtonTambah")
-        self.horizontalLayout_3.addWidget(self.pushButtonTambah)
+        button_layout.addWidget(self.pushButtonTambah)
 
-        self.retranslateUi()
-    
+        button_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        main_layout.addLayout(button_layout)
+
     def backToPreviousWindow(self):
         # Close the current window and show the previous window (FolderUI)
         self.close()
         self.previous_window = FileFolderUI()  # Assuming you have a FolderUI class
         self.previous_window.show()
-
-    def retranslateUi(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("MainWidget", "File Tuntasin"))
-        self.Title.setText(_translate("MainWidget", "File Tuntasin"))
-        self.labelNamaFile.setText(_translate("MainWidget", "Nama File"))
-        self.labelTagTugas.setText(_translate("MainWidget", "Tag Tugas"))
-        self.pushButtonTag.setText(_translate("MainWidget", "Tambah Tag"))
-        self.pushButtonFile.setText(_translate("MainWidget", "Upload File"))
-        self.pushButtonBatal.setText(_translate("MainWidget", "Batal"))
-        self.pushButtonTambah.setText(_translate("MainWidget", "Tambah Tugas"))
-
 
 if __name__ == "__main__":
     import sys
