@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate
 import sqlite3
 from src.ui.add_task_ui import AddTaskUI
+from src.controllers.add_file_controller import AddFileController
 
 
 from PyQt5.QtWidgets import QMessageBox
