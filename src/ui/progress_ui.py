@@ -83,7 +83,7 @@ class ProgressWindow(QWidget):
 
         view_combo = QComboBox()
         view_combo.addItems(["Bar Chart", "Pie Chart"])
-        view_combo.setCurrentText(self.view_type)
+        view_combo.setCurrentText(str(self.view_type))
 
         view_combo.setObjectName("viewComboBox")
 
