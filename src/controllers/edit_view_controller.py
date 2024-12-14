@@ -1,6 +1,6 @@
 import sys
 import os
-
+from .add_file_controller import AddFileController
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
@@ -17,11 +17,12 @@ class EditViewController:
         self.ui = ui
         self.taskId = taskId  
         self.DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'database.db')
-
+        self.add_file_controller = AddFileController(ui, False)
         self.setup_connections()
         self.load_task_details()
 
     def setup_connections(self):
+        self.ui.pushButton_4.clicked.connect(self.add_file_controller.upload_file)
         self.ui.add.clicked.connect(self.edit_task)
         self.ui.cancel.clicked.connect(self.home)
         self.ui.date.setDate(QDate.currentDate())
@@ -106,6 +107,15 @@ class EditViewController:
                 for tag in tags:
                     if tag:
                         cur.execute(query3, (self.taskId, tag))
+
+
+                query4 = """
+                DELETE FROM Attachment
+                WHERE taskId = ?
+                """
+                cur.execute(query4, (self.taskId,))
+
+                self.add_file_controller.add_task_file(self.taskId, False)
 
                 conn.commit()
 

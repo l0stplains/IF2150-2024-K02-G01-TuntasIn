@@ -6,8 +6,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QDate
 import sqlite3
-from src.ui.task_view_ui import TaskViewUI
-
 
 from PyQt5.QtWidgets import QMessageBox
 
@@ -17,7 +15,6 @@ class TaskViewController:
         self.ui = ui
         self.taskId = taskId  
         self.DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'database.db')
-
         self.setup_connections()
         self.load_task_details()
 
@@ -25,6 +22,33 @@ class TaskViewController:
         self.ui.back.clicked.connect(self.home)
         self.ui.delete_2.clicked.connect(self.delete)
         self.ui.edit.clicked.connect(self.edit)
+        self.ui.file.clicked.connect(self.query_filepath)
+
+    def query_filepath(self):
+        with sqlite3.connect(self.DB_PATH) as conn:
+            # Check if the task exists in the Task table
+            query_task = "SELECT filePath FROM Attachment WHERE taskId = ?"
+            cursor = conn.execute(query_task, (self.taskId,))
+            task = cursor.fetchone()
+
+        if not task:
+            QMessageBox.warning(None, "Warning", f"No task exists!")
+            return
+        self.open_file(task[0])
+            
+    def open_file(self, file_path):
+        if os.path.exists(file_path):
+            try:
+                if os.name == 'nt':  # Windows
+                    os.startfile(file_path)
+                elif os.name == 'posix':  # macOS/Linux
+                    subprocess.run(["xdg-open", file_path], check=True)
+                else:
+                    QMessageBox.warning(self.folder_ui, "Error", "Unsupported operating system.")
+            except Exception as e:
+                QMessageBox.warning(self.folder_ui, "Error", f"Failed to open file: {str(e)}")
+        else:
+            QMessageBox.warning(self.folder_ui, "Error", f"File does not exist: {file_path}")
 
     def load_task_details(self):
         try:

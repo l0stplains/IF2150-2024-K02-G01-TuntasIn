@@ -80,9 +80,9 @@ class TaskViewUI(object):
         self.label_6.setGeometry(QtCore.QRect(100, 620, 91, 41))
         self.label_6.setStyleSheet("")
         self.label_6.setObjectName("label_6")
-        self.pushButton = QtWidgets.QPushButton(self.widget)
-        self.pushButton.setGeometry(QtCore.QRect(100, 800, 201, 41))
-        self.pushButton.setStyleSheet("QPushButton{\n"
+        self.file = QtWidgets.QPushButton(self.widget)
+        self.file.setGeometry(QtCore.QRect(100, 800, 201, 41))
+        self.file.setStyleSheet("QPushButton{\n"
 "background-color: #7E57C2 ;\n"
 "border-radius: 10px;\n"
 "color:white;\n"
@@ -93,7 +93,7 @@ class TaskViewUI(object):
 "background-color: rgb(163, 114, 255);\n"
 "\n"
 "}")
-        self.pushButton.setObjectName("pushButton")
+        self.file.setObjectName("file")
         self.label_7 = QtWidgets.QLabel(self.widget)
         self.label_7.setGeometry(QtCore.QRect(100, 750, 91, 41))
         self.label_7.setStyleSheet("")
@@ -127,21 +127,6 @@ class TaskViewUI(object):
 "\n"
 "}")
         self.edit.setObjectName("edit")
-        self.pushButton_4 = QtWidgets.QPushButton(self.widget)
-        self.pushButton_4.setGeometry(QtCore.QRect(330, 800, 51, 41))
-        self.pushButton_4.setStyleSheet("\n"
-"QPushButton{\n"
-"background-color: #7E57C2 ;\n"
-"border-radius: 20px;\n"
-"color:white;\n"
-"font-weight: 700;\n"
-"font-size: 16px;\n"
-"}\n"
-"QPushButton:hover{\n"
-"background-color: rgb(163, 114, 255);\n"
-"\n"
-"}")
-        self.pushButton_4.setObjectName("pushButton_4")
         self.label_8 = QtWidgets.QLabel(self.widget)
         self.label_8.setGeometry(QtCore.QRect(100, 520, 91, 41))
         self.label_8.setStyleSheet("")
@@ -241,11 +226,10 @@ class TaskViewUI(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.label_3.setText(_translate("Dialog", "Deskripsi"))
         self.label_6.setText(_translate("Dialog", "Tag"))
-        self.pushButton.setText(_translate("Dialog", "Lampirkan"))
+        self.file.setText(_translate("Dialog", "Open File"))
         self.label_7.setText(_translate("Dialog", "File"))
         self.back.setText(_translate("Dialog", "Kembali"))
         self.edit.setText(_translate("Dialog", "Edit"))
-        self.pushButton_4.setText(_translate("Dialog", "+"))
         self.label_8.setText(_translate("Dialog", "Kategori"))
         self.label_9.setText(_translate("Dialog", "Tanggal Tenggat"))
         self.name.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

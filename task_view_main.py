@@ -42,7 +42,7 @@ if __name__ == "__main__":
         print("Warning: main.qss not found")
 
     # taskId ini harus minta dari home yaa aa repki aslinya
-    taskId = 1
+    taskId = 15
     window = Task_View_Main(taskId)
     window.show()
 
