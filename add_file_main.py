@@ -30,6 +30,10 @@ class Add_File_Main(QMainWindow):
         
         # Set window properties
         self.setMinimumSize(800, 600)
+        # Ensure widgets fill space properly
+        layout.setContentsMargins(10, 10, 10, 10)  # Adjust margins if necessary
+        layout.setSpacing(20)  # Adjust spacing between widgets
+        layout.addStretch(1)  # Add stretch to allow the layout to adjust space
         
         # Connect navbar signals
         # self.navbar.home_clicked.connect(lambda: self.home_ui.show())
