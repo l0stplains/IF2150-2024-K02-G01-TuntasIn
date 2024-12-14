@@ -146,7 +146,7 @@ class ProgressWindow(QWidget):
         year_combo.setObjectName("yearComboBox")
         current_year = datetime.now().year
         year_combo.addItems([str(year)
-                            for year in range(2000, current_year + 1)])
+                            for year in range(2000, current_year + 10)])
         year_combo.setCurrentText(str(self.selected_year))
         year_layout.addWidget(year_combo)
         layout.addLayout(year_layout)

@@ -565,7 +565,28 @@ QWidget#dayCell {
 }
 QLabel#taskLabel {
    background: #FFFFFF;
-   border: 1px solid #7E57C2;
+   border: 1px solid #FFCA28;
+   border-radius: 5px;
+   padding: 5px;
+   min-height: 15px;
+   max-height: 15px;
+   margin: 1px 0;
+   font-size: 12px;
+}
+
+QLabel#taskLabelLate {
+   background: #FFFFFF;
+   border: 1px solid red;
+   border-radius: 5px;
+   padding: 5px;
+   min-height: 15px;
+   max-height: 15px;
+   margin: 1px 0;
+   font-size: 12px;
+}
+QLabel#taskLabelCompleted {
+   background: #FFFFFF;
+   border: 1px solid #66BB6A;
    border-radius: 5px;
    padding: 5px;
    min-height: 15px;

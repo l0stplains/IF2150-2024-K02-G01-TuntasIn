@@ -40,6 +40,6 @@ class CalendarController:
         # Format the datetime object into the desired format
         formatted_date = date_object.strftime("%d-%m-%Y")
         cursor.execute(query, (formatted_date,))
-        tasks = [row[1] for row in cursor.fetchall()]
+        tasks = [(row[1], row[3], row[4]) for row in cursor.fetchall()]
         connection.close()
         return tasks
