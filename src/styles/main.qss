@@ -523,3 +523,145 @@ QMessageBox QPushButton {
 QMessageBox QPushButton:hover {
    background-color: #673AB7;
 }
+
+#appLabel {
+    font-size: 32px;
+   font-weight: bold;
+   color: #7E57C2;
+   padding: 12px 20px;
+   border: none;
+   background: transparent;
+   font-family: 'Segoe UI', Arial;
+   letter-spacing: 1px;
+}
+
+/* Fokus outline berwarna ungu untuk semua input */
+QLineEdit:focus, QComboBox:focus {
+    border: 2px solid purple;
+    border-radius: 8px;
+    background: #fff;
+}
+
+/* Gaya untuk tombol OK */
+#okButton {
+    background-color: purple;
+    color: white;
+    border: 2px solid purple;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Gaya hover untuk tombol OK */
+#okButton:hover {
+    background-color: #d1a3ff; /* Ungu pudar */
+    border-color: #d1a3ff;
+}
+
+/* Gaya untuk tombol Cancel */
+#cancelButton {
+    background-color: red;
+    color: white;
+    border: 2px solid red;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Gaya hover untuk tombol Cancel */
+#cancelButton:hover {
+    background-color: #ff7f7f; /* Merah pudar */
+    border-color: #ff7f7f;
+}
+
+/* Styling untuk label navigasi */
+#homeLabel, #folderLabel, #calendarLabel, #progressLabel {
+    background: transparent;
+   border: none;
+   padding: 12px 24px;
+   margin: 0 4px;
+   color: #5C6BC0; /* Warna biru */
+   font-size: 16px;
+   font-weight: 500;
+   border-radius: 6px;
+}
+
+/* Efek hover untuk label navigasi */
+#homeLabel:hover, #folderLabel:hover, #calendarLabel:hover, #progressLabel:hover {
+    color: #FF8800;
+    text-decoration: underline;
+}
+
+/* Styling untuk QLabel secara umum */
+QLabel {
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    color: #800080;
+    padding: 6px 10px;
+}
+
+/* Gaya umum untuk QPushButton */
+QPushButton {
+    background-color: #FF8800;
+    color: white;
+    border: 2px solid #cc6f00;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Efek hover untuk tombol umum */
+QPushButton:hover {
+    background-color: #ff9933;
+    border-color: #b25900;
+}
+
+/* Style elemen chart */
+QChartView {
+    background-color: white;
+    padding: 10px;
+}
+
+/* Perbesar elemen dialog */
+QDialogButtonBox QPushButton {
+    font-size: 14px;
+}
+
+/* Gaya untuk tombol "Tampilan" dengan latar belakang pink */
+#viewButton {
+    background-color: #ff80b3;  /* Pink gelap */
+    color: white;
+    border: 2px solid #ff4d94;  /* Warna border pink gelap */
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Efek hover untuk tombol "Tampilan" dengan pink pudar */
+#viewButton:hover {
+    background-color: #ffb3d9;  /* Pink pudar saat hover */
+    border-color: #ff80b3;  /* Warna border pink pudar saat hover */
+}
+
+
+/* Efek hover untuk tombol "Periode" dengan warna lain */
+#periodButton:hover {
+    background-color: #ff9933;  /* Warna lain untuk hover pada Periode */
+    border-color: #b25900;  /* Warna border hover Periode */
+}
+
+#Tahun {
+    color: black; 
+    font-weight: bold; 
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+#Bulan {
+    color: black; 
+    font-weight: bold; 
+    font-family: 'Segoe UI', Arial, sans-serif;
+}

@@ -1,4 +1,3 @@
-
 import sqlite3
 from datetime import datetime
 from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
@@ -161,8 +160,21 @@ class HomeController:
             self.filter_tasks()
         
     def add_task(self):
-        # Implement navigation to add task form
-        pass
+        # Collect task details from the UI
+        task_name = self.main_window.task_name_input.text()
+        due_date = self.main_window.due_date_input.date().toString("yyyy-MM-dd")
+
+        # Add task to the database
+        if task_name:
+            self.task_model.add_task(task_name, due_date)  # No need to specify status, will default to 'Pending'
+            QMessageBox.information(self.main_window, "Success", "Task added successfully!")
+            self.refresh_tasks()
+        else:
+            QMessageBox.warning(self.main_window, "Error", "Task name cannot be empty!")
+
+    def refresh_tasks(self):
+        tasks = self.task_model.get_all_tasks()
+        self.main_window.update_task_list(tasks)
         
     def edit_task(self, task_id):
         # Implement navigation to edit task form
