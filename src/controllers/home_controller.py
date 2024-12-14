@@ -1,6 +1,13 @@
 import sqlite3
 from datetime import datetime
 from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
+import sqlite3
+from datetime import datetime
+from PyQt5.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton
+from src.controllers.edit_view_controller import EditViewController
+from src.controllers.task_view_controller import TaskViewController
+from src.ui.task_view_ui import TaskViewUI
+from src.ui.edit_view_ui import EditViewUI
 
 class FilterDialog(QDialog):
     def __init__(self, parent=None):
@@ -157,12 +164,22 @@ class HomeController:
         self.main_window.update_task_list(tasks)
         
     def edit_task(self, task_id):
-        # Implement navigation to edit task form
-        pass
+        task_dialog = QDialog()
+        
+        task_view_ui = EditViewUI(task_dialog)
+        
+        task_controller = EditViewController(task_view_ui, task_id)
+        
+        task_dialog.exec_()
         
     def show_task_details(self, task_id):
-        # Implement navigation to task details
-        pass
+        task_dialog = QDialog()
+        
+        task_view_ui = TaskViewUI(task_dialog)
+        
+        task_controller = TaskViewController(task_view_ui, task_id)
+        
+        task_dialog.exec_()
         
     def delete_task(self, task_id):
         reply = QMessageBox.question(
