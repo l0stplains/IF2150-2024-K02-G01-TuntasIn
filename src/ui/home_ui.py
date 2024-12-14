@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QListWidget, QLineEdit, QDateEdit
 
-
 class HomeWindow(QMainWindow):
     def __init__(self):
         super().__init__()
