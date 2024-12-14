@@ -1,8 +1,10 @@
 import sys
 from src.ui.home_ui import HomeUI
 from src.ui.calendar_ui import CalendarUi
+from src.ui.progress_ui import ProgressWindow
 from src.controllers.home_controller import HomeController
 from src.components.navbar import NavBar
+from src.controllers.progress_controller import ProgressController
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QStackedWidget
 from PyQt5.QtCore import Qt
 # from src.setup_database import setup_database  # Tambahkan ini
@@ -37,7 +39,8 @@ class MainWindow(QMainWindow):
         self.home_controller = HomeController(self.home_ui)
         self.folder_ui = QWidget()  # Replace with your actual folder UI
         self.calendar_ui = CalendarUi("tasks.db")  # Replace with your actual calendar UI
-        self.progress_ui = QWidget()  # Replace with your actual progress UI
+        self.progress_ui = ProgressWindow()  # Replace with your actual progress UI
+        self.progress_ui.set_progress_controller(ProgressController(self.progress_ui, "tasks.db"))
         
         self.stacked_widget.addWidget(self.home_ui)
         self.stacked_widget.addWidget(self.folder_ui)

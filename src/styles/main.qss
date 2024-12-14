@@ -594,13 +594,14 @@ QLineEdit:focus, QComboBox:focus {
     text-decoration: underline;
 }
 
-/* Styling untuk QLabel secara umum */
+/* Styling untuk QLabel secara umum 
 QLabel {
     font-family: 'Segoe UI';
     font-size: 16px;
     color: #800080;
     padding: 6px 10px;
 }
+*/
 
 /* Gaya umum untuk QPushButton */
 QPushButton {

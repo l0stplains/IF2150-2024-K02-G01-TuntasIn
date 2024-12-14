@@ -9,11 +9,10 @@ from PyQt5.QtChart import (
 from PyQt5.QtCore import Qt
 from datetime import datetime
 
-class ProgressWindow(QMainWindow):
+class ProgressWindow(QWidget):
     def __init__(self, progress_controller=None):
         super().__init__()
         self.setWindowTitle("Progress Tugas")
-        self.resize(1280, 720)
 
         # Save reference to ProgressController (if available)
         self.progress_controller = progress_controller
@@ -21,32 +20,11 @@ class ProgressWindow(QMainWindow):
         # Setup UI
         self.central_widget = QWidget()
         self.main_layout = QVBoxLayout(self.central_widget)
-        self.setCentralWidget(self.central_widget)
         header_layout = QHBoxLayout()
 
-        # Application label
-        self.app_label = QLabel("TuntasIn")
-        self.app_label.setObjectName("appLabel")
-        header_layout.addWidget(self.app_label)
-        spacer = QWidget()
-        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        header_layout.addWidget(spacer)
-
-        # Navigation elements
-        self.nav_labels = {
-            "home": QLabel("Home"),
-            "folder": QLabel("Folder"),
-            "calendar": QLabel("Calendar"),
-            "progress": QLabel("Progress"),
-        }
-        for name, label in self.nav_labels.items():
-            label.setObjectName(f"{name}Label")
-            label.setCursor(QCursor(Qt.PointingHandCursor))
-            label.mousePressEvent = self.on_label_click  
-            header_layout.addWidget(label)
-
-        # Add header to main layout
-        self.main_layout.addLayout(header_layout)
+        # Create a main layout if not already done
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.central_widget)  # Add the central widget to the main layout
 
         # "Tampilan" and "Periode" buttons
         button_layout = QHBoxLayout()
@@ -300,17 +278,3 @@ class ProgressWindow(QMainWindow):
             axis_y = self.chart.axisY()
             if axis_y is not None:
                 self.chart.removeAxis(axis_y)
-
-    def on_label_click(self, event):
-        """Tangani klik pada label navigasi."""
-        label = event.widget()
-        if label == self.home_label:
-            print("Navigasi ke Home")
-        elif label == self.folder_label:
-            print("Navigasi ke Folder")
-        elif label == self.calendar_label:
-            print("Navigasi ke Kalender")
-        elif label == self.progress_label:
-            print("Navigasi ke Progress")
-
-
