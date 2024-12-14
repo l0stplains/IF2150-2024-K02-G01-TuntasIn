@@ -6,6 +6,9 @@ from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtGui import QFont
 from datetime import datetime
 from src.controllers.calendar_controller import CalendarController
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
+from PyQt5.QtCore import QDate
+from datetime import datetime
 
 class CalendarUi(QWidget):
     def __init__(self, db_path):
@@ -104,26 +107,28 @@ class CalendarUi(QWidget):
         task_list_layout = QVBoxLayout(task_list_widget)
         task_list_layout.setContentsMargins(5, 5, 5, 5)
 
-        # Add tasks to task list
+        # Format date string for database query
         date = QDate(self.current_date.year(), self.current_date.month(), day).toString("yyyy-MM-dd")
         tasks = self.controller.get_tasks_for_date(date)
+        
         for task, isComplete, dueDate in tasks:
             task_label = QLabel(task)
+            
+            try:
+                date_obj = datetime.strptime(dueDate, "%Y-%m-%d %H:%M:%S")
+                current_date = datetime.now()
 
-            # Convert the date string to a datetime object
-            date_obj = datetime.strptime(dueDate, "%d-%m-%Y")
-
-            # Get the current date
-            current_date = datetime.now()
-
-            # Compare the dates
-            if isComplete:
-                task_label.setObjectName("taskLabelCompleted")
-            elif current_date > date_obj:
-                task_label.setObjectName("taskLabelLate")
-            else:
-                task_label.setObjectName("taskLabel")
-            task_list_layout.addWidget(task_label)
+                if isComplete:
+                    task_label.setObjectName("taskLabelCompleted")
+                elif current_date > date_obj:
+                    task_label.setObjectName("taskLabelLate")
+                else:
+                    task_label.setObjectName("taskLabel")
+                
+                task_list_layout.addWidget(task_label)
+            except ValueError:
+                print(f"Error parsing date: {dueDate}")
+                continue
 
         task_scroll.setWidget(task_list_widget)
         day_layout.addWidget(task_scroll)

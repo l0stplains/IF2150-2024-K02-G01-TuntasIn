@@ -1,7 +1,6 @@
 import sqlite3
 from datetime import datetime
 
-
 class CalendarController:
     def __init__(self, db_path):
         self.db_path = db_path
@@ -27,17 +26,28 @@ class CalendarController:
         """Fetch tasks for a specific date."""
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
-        query = """
-        SELECT t.taskId, t.title, t.category, t.isComplete, t.dueDate, GROUP_CONCAT(tag.name)
-        FROM Task t
-        LEFT JOIN tags tag ON t.taskId = tag.task_id
-        WHERE t.dueDate LIKE ?
-        GROUP BY t.taskId
-"""
-        date_object = datetime.strptime(date, "%Y-%m-%d")
-        # Format the datetime object into the desired format
-        formatted_date = date_object.strftime("%d-%m-%Y")
-        cursor.execute(query, (formatted_date,))
-        tasks = [(row[1], row[3], row[4]) for row in cursor.fetchall()]
-        connection.close()
-        return tasks
+        
+        # The date parameter comes in as YYYY-MM-DD
+        # Need to convert it to match the database format pattern
+        try:
+            date_obj = datetime.strptime(date, "%Y-%m-%d")
+            # Format the date to match the start of the database timestamp format
+            date_pattern = f"{date_obj.strftime('%Y-%m-%d')}%"
+            
+            query = """
+            SELECT t.taskId, t.title, t.category, t.isComplete, t.dueDate, GROUP_CONCAT(tag.name)
+            FROM Task t 
+            LEFT JOIN tags tag ON t.taskId = tag.task_id
+            WHERE t.dueDate LIKE ?
+            GROUP BY t.taskId
+            """
+            
+            cursor.execute(query, (date_pattern,))
+            tasks = [(row[1], row[3], row[4]) for row in cursor.fetchall()]
+            connection.close()
+            return tasks
+            
+        except Exception as e:
+            print(f"Error in get_tasks_for_date: {e}")
+            connection.close()
+            return []
