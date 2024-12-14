@@ -34,9 +34,7 @@ class CalendarController:
         WHERE t.dueDate LIKE ?
         GROUP BY t.taskId
 """
-        # Parse the string into a datetime object
         date_object = datetime.strptime(date, "%Y-%m-%d")
-
         # Format the datetime object into the desired format
         formatted_date = date_object.strftime("%d-%m-%Y")
         cursor.execute(query, (formatted_date,))
