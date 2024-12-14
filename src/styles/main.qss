@@ -521,6 +521,30 @@ QMessageBox QPushButton {
    color: white;
 }
 
+QMessageBox QPushButton[text="Yes"] {
+   padding: 8px 16px;
+   border-radius: 6px;
+   min-width: 100px;
+   background-color: #7E57C2;
+   color: white;
+}
+
+QMessageBox QPushButton[text="No"] {
+   padding: 8px 16px;
+   border-radius: 6px;
+   min-width: 100px;
+   background-color: #E53935;
+   color: white;
+}
+
+QMessageBox QPushButton[text="OK"] {
+   padding: 8px 16px;
+   border-radius: 6px;
+   min-width: 100px;
+   background-color: #7E57C2;
+   color: white;
+}
+
 QMessageBox QPushButton:hover {
    background-color: #673AB7;
 }

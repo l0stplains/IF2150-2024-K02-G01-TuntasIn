@@ -6,13 +6,14 @@ from src.components.navbar import NavBar
 
 Folder_Main = None
 class AddFileController:
-    def __init__(self, ui):
+    def __init__(self, ui, isInside):
         """
         Initialize the controller with a reference to the UI instance.
         """
         self.ui = ui
         self.model = FileModel()  # Inisialisasi model database
-        self.setup_connections()
+        if isInside:
+            self.setup_connections()
 
     def setup_connections(self):
         """
@@ -27,13 +28,13 @@ class AddFileController:
         Handle the 'Upload File' button click.
         """
         file_name, _ = QFileDialog.getOpenFileName(
-            self.ui, 
+            None, 
             "Select File", 
             "", 
             "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
         )
         if file_name:
-            QMessageBox.information(self.ui, "File Selected", f"File '{file_name}' selected!", QMessageBox.Ok)
+            QMessageBox.information(None, "File Selected", f"File '{file_name}' selected!", QMessageBox.Ok)
             self.ui.selected_file = file_name  # Store selected file path
             
     def query_id(self):
@@ -53,9 +54,9 @@ class AddFileController:
             # Get the taskId
             task_id = task[0]
             
-        self.add_task_file(task_id)
+        self.add_task_file(task_id, isInside=True)
 
-    def add_task_file(self, task_id):
+    def add_task_file(self, task_id, isInside):
         """
         Handle the 'Tambah Tugas' button click.
         """
@@ -82,8 +83,9 @@ class AddFileController:
             self.model.conn.commit()
         
         except Exception as e:
-            QMessageBox.warning(self.ui, "Error", f"Failed to add task: {str(e)}", QMessageBox.Ok)
+            QMessageBox.warning(None, "Error", f"Failed to add task: {str(e)}", QMessageBox.Ok)
 
         # Clear inputs
-        QMessageBox.information(self.ui, "Success", "File added successfully!", QMessageBox.Ok)
-        self.ui.lineEditNama.clear()
+        QMessageBox.information(None, "Success", "File added successfully!", QMessageBox.Ok)
+        if isInside:
+            self.ui.lineEditNama.clear()
