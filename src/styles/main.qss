@@ -236,6 +236,7 @@ QDialog QPushButton {
    font-weight: bold;
    min-width: 100px;
    font-size: 13px;
+   background-color: #7E57C2;
 }
 
 QDialog QPushButton[text="Apply"] {

@@ -80,7 +80,7 @@ class FileFolderUI(QMainWindow):
     def add_card(self, id, file_path, name=None, task=None):
         # Check if name and tag are provided, otherwise use defaults
         name = name or "Unnamed File"
-        task = task or "No Tag"
+        task = task or "No Task"
 
         # Use default or dynamic icon based on file extension
         if name.endswith((".png", ".jpg", ".jpeg", ".bmp")):
