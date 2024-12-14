@@ -5,6 +5,13 @@ from PyQt5.QtCore import QCoreApplication
 from src.components.navbar import NavBar
 
 Folder_Main = None
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QMainWindow
+from src.models.folder import FileModel  # Import model FileModel
+import os
+from PyQt5.QtCore import QCoreApplication
+from src.components.navbar import NavBar
+
+Folder_Main = None
 class AddFileController:
     def __init__(self, ui, isInside):
         """
@@ -20,6 +27,7 @@ class AddFileController:
         Connect UI buttons to their respective slot methods.
         """
         # self.ui.pushButtonTag.clicked.connect(self.add_tag)
+        # self.ui.pushButtonTag.clicked.connect(self.add_tag)
         self.ui.pushButtonFile.clicked.connect(self.upload_file)
         self.ui.pushButtonTambah.clicked.connect(self.query_id)
 
@@ -31,6 +39,8 @@ class AddFileController:
             None, 
             "Select File", 
             "", 
+            "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
+        )
             "Images (*.png *.jpg *.jpeg *.bmp);;Documents (*.docx *.pdf *.txt);;All Files (*.*)"
         )
         if file_name:

@@ -6,20 +6,35 @@ from PyQt5.QtCore import QCoreApplication
 from src.components.navbar import NavBar
 
 Folder_Main = None
+from PyQt5.QtWidgets import QMessageBox , QPushButton, QMainWindow,  QFileDialog
+from src.models.folder import FileModel
+import os
+import subprocess
+from PyQt5.QtCore import QCoreApplication
+from src.components.navbar import NavBar
+
+Folder_Main = None
 class FolderController:
     def __init__(self, folder_ui, add_file_ui):
+        self.file_model = FileModel()
         self.file_model = FileModel()
         self.folder_ui = folder_ui
         self.add_file_ui = add_file_ui
 
         self.setup_connections()
         self.load_files_from_database()
+        self.load_files_from_database()
 
     def setup_connections(self):
         # Connect FolderUI buttons
         # self.folder_ui.add_button.clicked.connect(self.go_to_add_file)
+        # self.folder_ui.add_button.clicked.connect(self.go_to_add_file)
         self.add_file_ui.pushButtonBatal.clicked.connect(self.go_back_to_folder_ui)
         
+        # # Add connections to open file buttons dynamically
+        for card in self.folder_ui.cards:
+            open_file_button = card.findChild(QPushButton, 'open_file_button')
+            open_file_button.clicked.connect(lambda _, card=card: self.open_file_from_card(card))
         # # Add connections to open file buttons dynamically
         for card in self.folder_ui.cards:
             open_file_button = card.findChild(QPushButton, 'open_file_button')

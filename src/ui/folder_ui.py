@@ -1,8 +1,13 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QGridLayout, QHBoxLayout, QWidget
 from PyQt5.QtWidgets import QLabel, QPushButton, QScrollArea, QMessageBox
 from PyQt5.QtGui import QPixmap, QFontMetrics
+from PyQt5.QtWidgets import QLabel, QPushButton, QScrollArea, QMessageBox
+from PyQt5.QtGui import QPixmap, QFontMetrics
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+import os
+from src.models.folder import FileModel
+from PyQt5.QtWidgets import QMessageBox
 import os
 from src.models.folder import FileModel
 from PyQt5.QtWidgets import QMessageBox
@@ -13,6 +18,7 @@ class FileFolderUI(QMainWindow):
         super().__init__()
         self.setWindowTitle("File and Folder Explorer")
         self.setGeometry(100, 100, 800, 600)
+        self.file_model = FileModel("database.db")
         self.file_model = FileModel("database.db")
 
         # Central widget
@@ -28,6 +34,7 @@ class FileFolderUI(QMainWindow):
 
         button_layout.addStretch()  # Push buttons to the right
         self.add_button.setFixedWidth(500)
+        self.add_button.setFixedWidth(500)
 
         # Style buttons (optional)
         self.add_button.setStyleSheet("""
@@ -42,6 +49,7 @@ class FileFolderUI(QMainWindow):
                 background-color: #0056b3;
             }
         """)
+        
         
         # Add buttons to layout
         button_layout.addWidget(self.add_button)
@@ -60,6 +68,10 @@ class FileFolderUI(QMainWindow):
         self.grid_layout.setHorizontalSpacing(10)  # Keep horizontal spacing larger
         self.grid_layout.setVerticalSpacing(10)  # Reduce vertical gap
         # grid_layout.rowStretch(100)  # Push everything to the top 
+        self.grid_layout = QGridLayout(grid_container)
+        self.grid_layout.setHorizontalSpacing(10)  # Keep horizontal spacing larger
+        self.grid_layout.setVerticalSpacing(10)  # Reduce vertical gap
+        # grid_layout.rowStretch(100)  # Push everything to the top 
         
         # Set the stylesheet for grid_container
         grid_container.setStyleSheet("""
@@ -71,6 +83,7 @@ class FileFolderUI(QMainWindow):
 
         # Add some cards
         self.cards = []
+        
         
         # Set grid container as the widget for the scroll area
         scroll_area.setWidget(grid_container)
@@ -117,7 +130,13 @@ class FileFolderUI(QMainWindow):
 
 class Card(QWidget):
     def __init__(self, attachment_id, name, task, icon_path, file_path, parent=None):
+    def __init__(self, attachment_id, name, task, icon_path, file_path, parent=None):
         super().__init__(parent)
+        self.attachment_id = attachment_id  # Store the unique attachment ID
+        self.file_path = file_path
+        self.parent_ui = parent  # Store the parent UI (FileFolderUI) instance
+        self.setMaximumWidth(400)
+        self.setMaximumHeight(400)
         self.attachment_id = attachment_id  # Store the unique attachment ID
         self.file_path = file_path
         self.parent_ui = parent  # Store the parent UI (FileFolderUI) instance
@@ -135,6 +154,8 @@ class Card(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
         layout.setSpacing(5)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(5)
 
         # Icon/Image
         icon_label = QLabel(self)
@@ -144,12 +165,32 @@ class Card(QWidget):
 
         # Title
         title_label = QLabel(name, self)
+        title_label = QLabel(name, self)
         title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #333;")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setWordWrap(True)
         title_label.setFixedHeight(30)
+        title_label.setWordWrap(True)
+        title_label.setFixedHeight(30)
 
         # Description
+        task_label = QLabel(task, self)
+        task_label.setStyleSheet("font-size: 12px; color: #666;")
+        task_label.setAlignment(Qt.AlignCenter)
+        task_label.setWordWrap(True)
+        task_label.setFixedHeight(20)
+
+        # Truncate title if it's too long
+        font_metrics = QFontMetrics(title_label.font())
+        max_width = title_label.width() - 20
+        title_width = font_metrics.width(name)
+        task_width = font_metrics.width(task)
+
+        if title_width > max_width:
+            truncated_title = font_metrics.elidedText(name, Qt.ElideRight, max_width)
+            truncated_task = font_metrics.elidedText(task, Qt.ElideRight, max_width)
+            title_label.setText(truncated_title)
+            task_label.setText(truncated_task)
         task_label = QLabel(task, self)
         task_label.setStyleSheet("font-size: 12px; color: #666;")
         task_label.setAlignment(Qt.AlignCenter)
@@ -199,12 +240,69 @@ class Card(QWidget):
             }
         """)
         self.delete_button.clicked.connect(self.delete_card)
+        self.open_file_button.clicked.connect(self.open_file_from_card)
+
+        # Delete button (X button)
+        self.delete_button = QPushButton("Delete", self)
+        self.delete_button.setStyleSheet("""
+            QPushButton {
+                padding: 5px 10px;
+                background-color: red;
+                color: white;
+                border: none;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: darkred;
+            }
+        """)
+        self.delete_button.clicked.connect(self.delete_card)
 
         # Add widgets to layout
         layout.addWidget(icon_label)
         layout.addWidget(title_label)
         layout.addWidget(task_label)
+        layout.addWidget(task_label)
         layout.addWidget(self.open_file_button)
+        layout.addWidget(self.delete_button)
+
+    def delete_card(self):
+        # Directly call the delete_card method of FileFolderUI instance (parent_ui)
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("Confirm Delete")
+        msg_box.setText("Are you sure you want to delete this file?")
+        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+        # Manually set button texts
+        yes_button = msg_box.button(QMessageBox.Yes)
+        yes_button.setText("Yes")
+        no_button = msg_box.button(QMessageBox.No)
+        no_button.setText("No")
+
+        # Tampilkan QMessageBox
+        reply = msg_box.exec_()
+        if reply == QMessageBox.Yes:
+            if self.parent_ui:
+                self.parent_ui.delete_card(self.attachment_id)
+
+    def open_file_from_card(self):
+        """Open the file associated with the current card."""
+        if not self.file_path:
+            QMessageBox.warning(self, "Error", "File path not found!")
+            return
+
+        if os.path.exists(self.file_path):
+            try:
+                if os.name == 'nt':  # Windows
+                    os.startfile(self.file_path)
+                elif os.name == 'posix':  # macOS/Linux
+                    subprocess.run(["xdg-open", self.file_path], check=True)
+                else:
+                    QMessageBox.warning(self, "Error", "Unsupported operating system.")
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"Failed to open file: {str(e)}")
+        else:
+            QMessageBox.warning(self, "Error", f"File does not exist: {self.file_path}")
         layout.addWidget(self.delete_button)
 
     def delete_card(self):
